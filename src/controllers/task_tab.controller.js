@@ -1,6 +1,6 @@
 const { addTaskTab } = require('../service/task_tab.service');
 
-async function postTaskTabs(req, res) {
+async function postTaskTabsHandler(req, res) {
     const { name } = req.body;
 
     try {
@@ -23,4 +23,4 @@ async function postTaskTabs(req, res) {
     }
 }
 
-module.exports = { postTaskTabs };
+module.exports = { postTaskTabsHandler };
