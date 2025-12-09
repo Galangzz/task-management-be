@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
@@ -10,7 +11,7 @@ const host = 'localhost';
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.use('/api')
+app.use('/api');
 
 const server = app.listen(port, host, () => {
     const address = server.address();
