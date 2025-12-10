@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const TaskTabRoutes = require('./routes/task_tabs.routes');
 const errorHandler = require('./middlewares/errorHandler');
+const notFoundHandler = require('./middlewares/notFoundPathHandler');
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(
 );
 
 app.use('/api/task-tabs', TaskTabRoutes);
+
+app.use(notFoundHandler);
 
 app.use(errorHandler);
 
