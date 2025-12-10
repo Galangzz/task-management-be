@@ -46,6 +46,11 @@ const TaskTabModel = {
         const result = mapTaskTabsToModel(rows);
         return result;
     },
+    getAllTaskTabs: async () => {
+        const sql = 'SELECT * FROM task_tabs ORDER BY created_at';
+        const [rows] = await db.execute(sql);
+        return rows;
+    },
 };
 
 module.exports = TaskTabModel;

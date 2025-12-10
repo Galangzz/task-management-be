@@ -30,4 +30,16 @@ async function getTaskTabWithTasks(req, res, next) {
     }
 }
 
-module.exports = { postTaskTabsHandler, getTaskTabWithTasks };
+async function getAllTaskTabs(req, res, next) {
+    try {
+        const data = await TaskTabService.getAllTaskTabs();
+        res.status(200).json({
+            status: 'success',
+            data,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs };

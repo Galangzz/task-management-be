@@ -25,4 +25,9 @@ async function getTaskTabWithTasks(id) {
     return result;
 }
 
-module.exports = { addTaskTab, getTaskTabWithTasks };
+async function getAllTaskTabs() {
+    const result = await TaskTabsModel.getAllTaskTabs();
+    return result;
+}
+
+module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs };
