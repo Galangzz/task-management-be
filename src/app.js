@@ -1,18 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const TaskTabRoutes = require('./routes/task_tab.routes');
+const cors = require('cors');
+const TaskTabRoutes = require('./routes/task_tabs.routes');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-const port = 3000;
-const host = 'localhost';
+const port = process.env.PORT;
+const host = process.env.HOST;
 
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(
+    cors({
+        origin: '*',
+        allowedHeaders: ['Content-Type'],
+    })
+);
 
 app.use('/api', TaskTabRoutes);
+
+app.use(errorHandler);
 
 const server = app.listen(port, host, () => {
     const address = server.address();

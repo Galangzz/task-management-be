@@ -1,4 +1,4 @@
-const { getAllTasks } = require('../service/task.service');
+const { getAllTasks } = require('../service/tasks.service');
 
 async function getAllTasksHandler(req, res) {
     const { id } = req.body;
