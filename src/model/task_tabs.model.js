@@ -51,6 +51,22 @@ const TaskTabModel = {
         const [rows] = await db.execute(sql);
         return rows;
     },
+    getDeletePermissionTaskTabs: async (id) => {
+        const sql = 'SELECT delete_permission AS permission FROM task_tabs WHERE id = ?';
+        const values = [id];
+
+        const [rows] = await db.execute(sql, values);
+        
+        return rows.length > 0 ? rows[0].permission : null;
+    },
+    deleteTaskTab: async (id) => {
+        const sql = 'DELETE FROM task_tabs WHERE id = ?';
+        const values = [id];
+
+        const [rows] = await db.execute(sql, values);
+
+        return rows.affectedRows > 0;
+    },
 };
 
 module.exports = TaskTabModel;

@@ -18,4 +18,21 @@ const mapTaskTabsToModel = (rows) => ({
         })),
 });
 
-module.exports = { mapTaskTabsToModel };
+const toMySQLDateTime = (date) => {
+    if (!date) return null;
+
+    try {
+        const d = new Date(date);
+
+        if (isNaN(d.getTime())) {
+            throw new Error('Invalid date');
+        }
+
+        return d.toISOString().slice(0, 19).replace('T', ' ');
+    } catch (error) {
+        console.error('Date conversion error:', error);
+        return null;
+    }
+};
+
+module.exports = { mapTaskTabsToModel, toMySQLDateTime };

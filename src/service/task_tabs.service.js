@@ -30,4 +30,22 @@ async function getAllTaskTabs() {
     return result;
 }
 
-module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs };
+async function deleteTaskTab(id) {
+    const permission = await TaskTabsModel.getDeletePermissionTaskTabs(id);
+
+    if (typeof permission === 'number' && permission === 0) {
+        throw new InvariantError('Task tab tidak bisa dihapus');
+    }
+
+    if (typeof permission !== 'number') {
+        throw new InvariantError('Task tab tidak ditemukan');
+    }
+
+    const result = await TaskTabsModel.deleteTaskTab(id);
+    if (!result) {
+        throw new InvariantError('Task tab gagal dihapus');
+    }
+    return result;
+}
+
+module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab };

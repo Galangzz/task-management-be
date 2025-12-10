@@ -42,4 +42,17 @@ async function getAllTaskTabs(req, res, next) {
     }
 }
 
-module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs };
+async function deleteTaskTab(req, res, next) {
+    const { id } = req.params;
+    try {
+        const result = await TaskTabService.deleteTaskTab(id);
+        res.status(200).json({
+            status: 'success',
+            message: 'Task tab berhasil dihapus',
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab };
