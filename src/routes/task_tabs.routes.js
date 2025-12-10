@@ -11,7 +11,11 @@ router
     .get(TaskTabsController.getAllTaskTabs)
     .post(TaskTabsController.postTaskTabsHandler)
     .all(methodNotAllowed(['GET', 'POST']));
-    
-router.get('/:id', TaskTabsController.getTaskTabWithTasks);
+
+router
+    .route('/:id')
+    .get(TaskTabsController.getTaskTabWithTasks)
+    .delete(TaskTabsController.deleteTaskTab)
+    .all(methodNotAllowed(['GET', 'DELETE']));
 
 module.exports = router;
