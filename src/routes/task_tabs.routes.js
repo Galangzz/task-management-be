@@ -3,6 +3,9 @@ const TaskTabsController = require('../controllers/task_tabs.controller');
 
 const router = express.Router();
 
-router.post('/task-tabs', TaskTabsController.postTaskTabsHandler);
+// "/task-tabs"
+
+router.post('/', TaskTabsController.postTaskTabsHandler);
+router.get('/:id', TaskTabsController.getTaskTabWithTasks);
 
 module.exports = router;
