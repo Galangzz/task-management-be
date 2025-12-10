@@ -1,4 +1,5 @@
 const InvariantError = require('../exceptions/InvariantError');
+const NotFoundError = require('../exceptions/NotFoundError');
 const TaskTabsModel = require('../model/task_tabs.model');
 const { nanoid } = require('nanoid');
 
@@ -16,4 +17,12 @@ async function addTaskTab(name) {
     return { id, name };
 }
 
-module.exports = { addTaskTab };
+async function getTaskTabWithTasks(id) {
+    const result = await TaskTabsModel.getTaskTabWithTasks(id);
+    if (!result) {
+        throw new NotFoundError('Task tab tidak ditemukan');
+    }
+    return result;
+}
+
+module.exports = { addTaskTab, getTaskTabWithTasks };

@@ -1,4 +1,5 @@
 const db = require('../config/database');
+const { mapTaskTabsToModel } = require('../utils/index');
 
 const TaskTabModel = {
     addTaskTab: async (id, name) => {
@@ -14,6 +15,36 @@ const TaskTabModel = {
 
         const [rows] = await db.execute(sql, values);
         return rows.length > 0 ? rows[0] : null;
+    },
+    getTaskTabWithTasks: async (id) => {
+        const sql = `
+            SELECT 
+                tb.id,
+                tb.name,
+                tb.created_at,
+                tb.delete_permission,
+                t.id as task_id,
+                t.title as task_title,
+                t.detail as task_detail,
+                t.created_at as task_created_at,
+                t.deadline as task_deadline,
+                t.has_date,
+                t.has_time,
+                t.starred,
+                t.is_completed
+            FROM task_tabs tb
+            LEFT JOIN tasks t ON tb.id = t.task_tabs_id
+            WHERE tb.id = ?
+        `;
+        const values = [id];
+        const [rows] = await db.execute(sql, values);
+
+        if (rows.length === 0) {
+            return null;
+        }
+
+        const result = mapTaskTabsToModel(rows);
+        return result;
     },
 };
 

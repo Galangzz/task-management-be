@@ -19,7 +19,7 @@ app.use(
     })
 );
 
-app.use('/api', TaskTabRoutes);
+app.use('/api/task-tabs', TaskTabRoutes);
 
 app.use(errorHandler);
 
