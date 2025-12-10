@@ -2,9 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const TaskTabRoutes = require('./routes/task_tabs.routes');
+
 const errorHandler = require('./middlewares/errorHandler');
 const notFoundHandler = require('./middlewares/notFoundPathHandler');
+
+const TaskTabRoutes = require('./routes/task_tabs.routes');
+const TaskRoutes = require('./routes/tasks.routes');
 
 const app = express();
 
@@ -21,6 +24,7 @@ app.use(
 );
 
 app.use('/api/task-tabs', TaskTabRoutes);
+app.use('/api/tasks', TaskRoutes);
 
 app.use(notFoundHandler);
 

@@ -1,8 +1,15 @@
 const express = require('express');
 const TaskController = require('../controllers/tasks.controller');
+const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 
 const router = express.Router();
 
-router.get('/tasks', TaskController.getAllTasksHandler);
+// "/api/tasks"
+
+router
+    .route('/')
+    .get(TaskController.getAllTasksHandler)
+    .post(TaskController.addTaskHandler)
+    .all(methodNotAllowed(['GET', 'POST']));
 
 module.exports = router;
