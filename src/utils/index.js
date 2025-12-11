@@ -18,6 +18,18 @@ const mapTaskTabsToModel = (rows) => ({
         })),
 });
 
+const mapTaskToModel = (row) => ({
+    id: row.id,
+    title: row.title,
+    detail: row.detail,
+    createdAt: row.created_at,
+    deadline: row.deadline,
+    hasDate: row.has_date,
+    hasTime: row.has_time,
+    starred: row.starred,
+    isCompleted: row.is_completed,
+});
+
 const toMySQLDateTime = (date) => {
     if (!date) return null;
 
@@ -35,4 +47,4 @@ const toMySQLDateTime = (date) => {
     }
 };
 
-module.exports = { mapTaskTabsToModel, toMySQLDateTime };
+module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel };

@@ -1,5 +1,5 @@
 const db = require('../config/database');
-const { mapTaskTabsToModel } = require('../utils/index');
+const { mapTaskTabsToModel, mapTaskToModel } = require('../utils/index');
 
 const TaskTabModel = {
     addTaskTab: async (id, name) => {
@@ -68,9 +68,9 @@ const TaskTabModel = {
         return rows.affectedRows > 0;
     },
     getStarredTaskTab: async (id) => {
-        const sql = 'SELECT * FROM tasks WHERE starred = true';
+        const sql = 'SELECT * FROM tasks WHERE starred = 1';
         const [rows] = await db.query(sql);
-        return rows[0];
+        return rows.map(mapTaskToModel);
     },
 };
 
