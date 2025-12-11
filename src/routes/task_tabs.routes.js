@@ -4,7 +4,7 @@ const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 
 const router = express.Router();
 
-// "/task-tabs"
+// "/api/task-tabs"
 
 router
     .route('/')

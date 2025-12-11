@@ -48,4 +48,13 @@ async function deleteTaskTab(id) {
     return result;
 }
 
-module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab };
+async function getStarredTaskTab() {
+    const result = await TaskTabsModel.getStarredTaskTab();
+    return {
+        id: 'starred-task',
+        title: 'Stared Task',
+        tasks: result,
+    };
+}
+
+module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getStarredTaskTab };

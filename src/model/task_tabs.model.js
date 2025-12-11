@@ -56,7 +56,7 @@ const TaskTabModel = {
         const values = [id];
 
         const [rows] = await db.execute(sql, values);
-        
+
         return rows.length > 0 ? rows[0].permission : null;
     },
     deleteTaskTab: async (id) => {
@@ -66,6 +66,11 @@ const TaskTabModel = {
         const [rows] = await db.execute(sql, values);
 
         return rows.affectedRows > 0;
+    },
+    getStarredTaskTab: async (id) => {
+        const sql = 'SELECT * FROM tasks WHERE starred = true';
+        const [rows] = await db.query(sql);
+        return rows[0];
     },
 };
 

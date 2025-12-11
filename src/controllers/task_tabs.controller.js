@@ -20,7 +20,12 @@ async function getTaskTabWithTasks(req, res, next) {
     const { id } = req.params;
 
     try {
-        const data = await TaskTabService.getTaskTabWithTasks(id);
+        let data;
+        if (id === 'starred-task') {
+            data = await TaskTabService.getStarredTaskTab();
+        } else {
+            data = await TaskTabService.getTaskTabWithTasks(id);
+        }
         res.status(200).json({
             status: 'success',
             data,
