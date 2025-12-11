@@ -16,6 +16,10 @@ async function addTaskTab(name) {
     }
     return { id, name };
 }
+async function getTaskTabById(id) {
+    const result = await TaskTabsModel.getTaskTabById(id);
+    return result;
+}
 
 async function getTaskTabWithTasks(id) {
     const result = await TaskTabsModel.getTaskTabWithTasks(id);
@@ -58,4 +62,4 @@ async function getStarredTaskTab() {
     };
 }
 
-module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getStarredTaskTab };
+module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getStarredTaskTab, getTaskTabById };

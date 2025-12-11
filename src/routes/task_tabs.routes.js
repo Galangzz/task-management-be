@@ -18,4 +18,9 @@ router
     .delete(TaskTabsController.deleteTaskTab)
     .all(methodNotAllowed(['GET', 'DELETE']));
 
+router
+    .route('/tab/:id')
+    .get(TaskTabsController.getTaskTabById)
+    .all(methodNotAllowed(['GET']));
+
 module.exports = router;

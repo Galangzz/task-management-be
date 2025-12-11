@@ -16,6 +16,12 @@ const TaskTabModel = {
         const [rows] = await db.execute(sql, values);
         return rows.length > 0 ? rows[0] : null;
     },
+    getTaskTabById: async (id) => {
+        const sql = 'SELECT * FROM task_tabs WHERE id = ?';
+        const values = [id];
+        const [rows] = await db.execute(sql, values);
+        return rows.length > 0 ? rows[0] : null;
+    },
     getTaskTabWithTasks: async (id) => {
         const sql = `
             SELECT 
