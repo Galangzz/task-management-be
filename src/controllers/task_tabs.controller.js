@@ -15,12 +15,30 @@ async function postTaskTabsHandler(req, res, next) {
         next(error);
     }
 }
+async function getTaskTabById(req, res, next) {
+    const { id } = req.params;
+    try {
+        const result = await TaskTabService.getTaskTabById(id);
+        res.status(200).json({
+            status: 'success',
+            message: 'Berhasil mengambil tab',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 async function getTaskTabWithTasks(req, res, next) {
     const { id } = req.params;
 
     try {
-        const data = await TaskTabService.getTaskTabWithTasks(id);
+        let data;
+        if (id === 'starred-task') {
+            data = await TaskTabService.getStarredTaskTab();
+        } else {
+            data = await TaskTabService.getTaskTabWithTasks(id);
+        }
         res.status(200).json({
             status: 'success',
             data,
@@ -55,4 +73,4 @@ async function deleteTaskTab(req, res, next) {
     }
 }
 
-module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab };
+module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getTaskTabById };

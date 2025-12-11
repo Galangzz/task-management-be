@@ -4,7 +4,7 @@ const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 
 const router = express.Router();
 
-// "/task-tabs"
+// "/api/task-tabs"
 
 router
     .route('/')
@@ -17,5 +17,10 @@ router
     .get(TaskTabsController.getTaskTabWithTasks)
     .delete(TaskTabsController.deleteTaskTab)
     .all(methodNotAllowed(['GET', 'DELETE']));
+
+router
+    .route('/tab/:id')
+    .get(TaskTabsController.getTaskTabById)
+    .all(methodNotAllowed(['GET']));
 
 module.exports = router;

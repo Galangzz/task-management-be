@@ -30,7 +30,6 @@ app.use(notFoundHandler);
 
 app.use(errorHandler);
 
-const server = app.listen(port, host, () => {
-    const address = server.address();
-    console.log(`Server running at http://${address.address}:${address.port}`);
+app.listen(port, host, () => {
+    console.log(`Server running at http://${host}:${port}`);
 });

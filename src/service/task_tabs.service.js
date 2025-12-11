@@ -16,6 +16,10 @@ async function addTaskTab(name) {
     }
     return { id, name };
 }
+async function getTaskTabById(id) {
+    const result = await TaskTabsModel.getTaskTabById(id);
+    return result;
+}
 
 async function getTaskTabWithTasks(id) {
     const result = await TaskTabsModel.getTaskTabWithTasks(id);
@@ -48,4 +52,14 @@ async function deleteTaskTab(id) {
     return result;
 }
 
-module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab };
+async function getStarredTaskTab() {
+    const result = await TaskTabsModel.getStarredTaskTab();
+    console.log({ resultStarredTaskTab: result });
+    return {
+        id: 'starred-task',
+        name: 'Starred Task',
+        tasks: result.length > 1 ? result : [result],
+    };
+}
+
+module.exports = { addTaskTab, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getStarredTaskTab, getTaskTabById };

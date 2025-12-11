@@ -1,21 +1,33 @@
 const mapTaskTabsToModel = (rows) => ({
     id: rows[0].id,
     name: rows[0].name,
-    created_at: rows[0].created_at,
-    delete_permission: rows[0].delete_permission,
+    createdAt: rows[0].created_at,
+    deletePermission: rows[0].delete_permission,
     tasks: rows
         .filter((r) => r.task_id)
         .map((row) => ({
             id: row.task_id,
             title: row.task_title,
             detail: row.task_detail,
-            created_at: row.task_created_at,
+            createdAt: row.task_created_at,
             deadline: row.task_deadline,
-            has_date: row.has_date,
-            has_time: row.has_time,
+            hasDate: row.has_date,
+            hasTime: row.has_time,
             starred: row.starred,
-            is_completed: row.is_completed,
+            isCompleted: row.is_completed,
         })),
+});
+
+const mapTaskToModel = (row) => ({
+    id: row.id,
+    title: row.title,
+    detail: row.detail,
+    createdAt: row.created_at,
+    deadline: row.deadline,
+    hasDate: row.has_date,
+    hasTime: row.has_time,
+    starred: row.starred,
+    isCompleted: row.is_completed,
 });
 
 const toMySQLDateTime = (date) => {
@@ -35,4 +47,4 @@ const toMySQLDateTime = (date) => {
     }
 };
 
-module.exports = { mapTaskTabsToModel, toMySQLDateTime };
+module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel };
