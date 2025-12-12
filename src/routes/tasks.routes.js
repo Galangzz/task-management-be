@@ -9,7 +9,7 @@ const router = express.Router();
 router
     .route('/')
     .get(TaskController.getAllTasksHandler)
-    .post(TaskController.addTaskHandler)
+    .post(TaskController.postTaskHandler)
     .all(methodNotAllowed(['GET', 'POST']));
 
 module.exports = router;
