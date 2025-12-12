@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     title VARCHAR(50) NOT NULL,
     detail TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    deadline TIMESTAMP,
+    deadline TIMESTAMP NULL DEFAULT NULL,
     has_date BOOLEAN NOT NULL DEFAULT false,
     has_time BOOLEAN NOT NULL DEFAULT false,
     starred BOOLEAN NOT NULL DEFAULT false,
