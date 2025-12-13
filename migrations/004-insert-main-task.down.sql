@@ -1,0 +1,1 @@
+DELETE FROM task_tabs WHERE id = 'main-task';

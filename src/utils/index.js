@@ -39,8 +39,13 @@ const toMySQLDateTime = (date) => {
         if (isNaN(d.getTime())) {
             throw new Error('Invalid date');
         }
+        const arrDate = d.toLocaleString('en-EN', { hour12: false }).replace(',', '').replaceAll('/', ' ').split(' ');
+        const month = arrDate[0];
+        const day = arrDate[1];
+        const year = arrDate[2];
+        const time = arrDate[3];
 
-        return d.toISOString().slice(0, 19).replace('T', ' ');
+        return `${year}-${month}-${day} ${time}`;
     } catch (error) {
         console.error('Date conversion error:', error);
         return null;

@@ -1,4 +1,3 @@
-const { response } = require('express');
 const TaskService = require('../service/tasks.service');
 
 async function getAllTasksHandler(req, res, next) {
@@ -14,7 +13,7 @@ async function getAllTasksHandler(req, res, next) {
     }
 }
 
-async function addTaskHandler(req, res, next) {
+async function postTaskHandler(req, res, next) {
     const { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId } = req.body;
     try {
         const result = await TaskService.addTask({
@@ -39,5 +38,5 @@ async function addTaskHandler(req, res, next) {
 
 module.exports = {
     getAllTasksHandler,
-    addTaskHandler,
+    postTaskHandler,
 };
