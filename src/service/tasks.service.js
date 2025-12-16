@@ -12,7 +12,7 @@ async function getTaskByIdService(id) {
 
 async function addTaskService(task) {
     const id = `task-${nanoid(16)}`;
-    const result = await TaskModel.getTaskByIdModel(id, task);
+    const result = await TaskModel.addTaskModel(id, task);
     if (!result) {
         throw new InvariantError('Gagal menambahkan catatan');
     }

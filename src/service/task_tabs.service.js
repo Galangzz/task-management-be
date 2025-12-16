@@ -54,11 +54,10 @@ async function deleteTaskTab(id) {
 
 async function getStarredTaskTab() {
     const result = await TaskTabsModel.getStarredTaskTab();
-    console.log({ resultStarredTaskTab: result });
     return {
         id: 'starred-task',
         name: 'Starred Task',
-        tasks: result.length > 1 ? result : [result],
+        tasks: result.length > 1 ? result : [...result],
     };
 }
 
