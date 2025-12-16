@@ -74,8 +74,9 @@ const TaskTabModel = {
         return rows.affectedRows > 0;
     },
     getStarredTaskTab: async (id) => {
-        const sql = 'SELECT * FROM tasks WHERE starred = 1';
+        const sql = 'SELECT * FROM tasks WHERE starred = 1 AND is_completed = 0';
         const [rows] = await db.query(sql);
+        console.log({rows: rows[0]})
         return rows.map(mapTaskToModel);
     },
 };

@@ -8,8 +8,13 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(TaskController.getAllTasksHandler)
-    .post(TaskController.postTaskHandler)
+    .get(TaskController.getAllTasksController)
+    .post(TaskController.postTaskController)
     .all(methodNotAllowed(['GET', 'POST']));
+
+router
+    .route('/:id')
+    .patch(TaskController.patchTaskController)
+    .all(methodNotAllowed(['PATCH']));
 
 module.exports = router;
