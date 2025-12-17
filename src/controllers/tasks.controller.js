@@ -1,9 +1,17 @@
-const TaskService = require('../service/tasks.service');
+const { nanoid } = require('nanoid');
+const InvariantError = require('../exceptions/InvariantError');
+const TaskModel = require('../model/tasks.model');
 
-async function getAllTasksController(req, res, next) {
+async function getTaskController(req, res, next) {
     const { id } = req.body;
+    console.log(id)
     try {
-        const data = await TaskService.getTaskByIdService(id);
+        const data = await TaskModel.getTaskByIdModel(id);
+
+        if (!data) {
+            throw new InvariantError('Catatan tidak ditemukan');
+        }
+
         res.status(200).json({
             status: 'success',
             data,
@@ -16,7 +24,9 @@ async function getAllTasksController(req, res, next) {
 async function postTaskController(req, res, next) {
     const { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId } = req.body;
     try {
-        const result = await TaskService.addTaskService({
+        const id = `task-${nanoid(16)}`;
+
+        const result = await TaskModel.addTaskModel(id, {
             title,
             detail,
             deadline,
@@ -26,6 +36,11 @@ async function postTaskController(req, res, next) {
             isCompleted,
             taskTabId,
         });
+
+        if (!result) {
+            throw new InvariantError('Gagal menambahkan catatan');
+        }
+
         res.status(201).json({
             status: 'success',
             message: 'Task berhasil ditambahkan',
@@ -39,7 +54,7 @@ async function postTaskController(req, res, next) {
 async function patchTaskController(req, res, next) {
     const { id } = req.params;
     const { starred, isCompleted } = req.body;
-    console.log({ starred, isCompleted });
+
     const field = [];
     const values = [];
 
@@ -53,8 +68,17 @@ async function patchTaskController(req, res, next) {
         values.push(isCompleted ? 1 : 0);
     }
 
+    if (field.length === 0) {
+        throw new InvariantError('Tidak ada field yang diperbarui');
+    }
+
     try {
-        const result = await TaskService.patchTaskService(id, field, values);
+        const result = await TaskModel.updateTaskModel(id, field, values);
+
+        if (!result) {
+            throw new InvariantError('Gagal memperbarui catatan');
+        }
+
         res.status(200).json({
             status: 'success',
             message: 'Catatan berhasil diperbaharui',
@@ -68,7 +92,7 @@ async function patchTaskController(req, res, next) {
 }
 
 module.exports = {
-    getAllTasksController,
+    getTaskController,
     postTaskController,
     patchTaskController,
 };
