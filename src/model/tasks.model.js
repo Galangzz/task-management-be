@@ -6,6 +6,7 @@ const getTaskByIdModel = async (id) => {
     const values = [id];
 
     const [rows] = await db.execute(sql, values);
+    console.log({ rows: rows[0] });
     return rows.length > 0 ? rows[0] : null;
 };
 const addTaskModel = async (id, { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId }) => {

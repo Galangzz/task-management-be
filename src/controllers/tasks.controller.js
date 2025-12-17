@@ -2,8 +2,9 @@ const { nanoid } = require('nanoid');
 const InvariantError = require('../exceptions/InvariantError');
 const TaskModel = require('../model/tasks.model');
 
-async function getAllTasksController(req, res, next) {
+async function getTaskController(req, res, next) {
     const { id } = req.body;
+    console.log(id)
     try {
         const data = await TaskModel.getTaskByIdModel(id);
 
@@ -53,7 +54,7 @@ async function postTaskController(req, res, next) {
 async function patchTaskController(req, res, next) {
     const { id } = req.params;
     const { starred, isCompleted } = req.body;
-    console.log({ starred, isCompleted });
+
     const field = [];
     const values = [];
 
@@ -91,7 +92,7 @@ async function patchTaskController(req, res, next) {
 }
 
 module.exports = {
-    getAllTasksController,
+    getTaskController,
     postTaskController,
     patchTaskController,
 };
