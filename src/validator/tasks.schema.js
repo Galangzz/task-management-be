@@ -7,7 +7,7 @@ const getAllTasksSchema = Joi.object({
 const postTaskSchema = Joi.object({
     title: Joi.string().trim().required(),
     detail: Joi.string().trim().empty('').default(null),
-    deadline: Joi.date().iso().optional(),
+    deadline: Joi.date().iso().allow(null),
     hasDate: Joi.boolean().required(),
     hasTime: Joi.boolean().required(),
     starred: Joi.boolean().required(),
@@ -20,8 +20,16 @@ const patchTaskParamsSchema = Joi.object({
 });
 
 const patchTaskBodySchema = Joi.object({
-    starred: Joi.boolean(),
-    isCompleted: Joi.boolean(),
-}).or('starred', 'isCompleted');
+    starred: Joi.boolean().allow(null),
+    isCompleted: Joi.boolean().allow(null),
+}).custom((value, helpers) => {
+    const { starred, isCompleted } = value;
+
+    if (starred === null && isCompleted === null) {
+        return helpers.error('any.invalid');
+    }
+
+    return value;
+}, 'At least one boolean value is required');
 
 module.exports = { getAllTasksSchema, postTaskSchema, patchTaskBodySchema, patchTaskParamsSchema };
