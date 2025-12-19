@@ -51,6 +51,7 @@ async function getTaskTabById(req, res, next) {
 
 async function getTaskTabWithTasks(req, res, next) {
     const { id } = req.params;
+    console.log({id})
 
     try {
         let data;

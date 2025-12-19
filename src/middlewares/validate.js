@@ -5,8 +5,9 @@ const validate =
             abortEarly: false,
             stripUnknown: true,
         });
-
+        
         if (error) {
+            console.error(error);
             return res.status(400).json({
                 status: 'fail',
                 message: 'Validation error',

@@ -4,7 +4,7 @@ const TaskModel = require('../model/tasks.model');
 
 async function getTaskController(req, res, next) {
     const { id } = req.body;
-    console.log(id)
+    console.log(id);
     try {
         const data = await TaskModel.getTaskByIdModel(id);
 
@@ -57,17 +57,17 @@ async function patchTaskController(req, res, next) {
 
     const field = [];
     const values = [];
-
+    
     if (starred !== undefined && starred !== null) {
         field.push('starred = ?');
         values.push(starred ? 1 : 0);
     }
-
+    
     if (isCompleted !== undefined && isCompleted !== null) {
         field.push('is_completed = ?');
         values.push(isCompleted ? 1 : 0);
     }
-
+    
     if (field.length === 0) {
         throw new InvariantError('Tidak ada field yang diperbarui');
     }
