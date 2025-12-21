@@ -9,11 +9,12 @@ async function getTaskController(req, res, next) {
         const data = await TaskModel.getTaskByIdModel(id);
 
         if (!data) {
-            throw new InvariantError('Catatan tidak ditemukan');
+            throw new InvariantError('Tugas tidak ditemukan');
         }
 
         res.status(200).json({
             status: 'success',
+            message: 'Berhasil mendapatkan tugas',
             data,
         });
     } catch (error) {
@@ -38,12 +39,12 @@ async function postTaskController(req, res, next) {
         });
 
         if (!result) {
-            throw new InvariantError('Gagal menambahkan catatan');
+            throw new InvariantError('Gagal menambahkan tugas');
         }
 
         res.status(201).json({
             status: 'success',
-            message: 'Task berhasil ditambahkan',
+            message: 'Tugas berhasil ditambahkan',
             data: result,
         });
     } catch (error) {
@@ -81,7 +82,7 @@ async function patchTaskController(req, res, next) {
 
         res.status(200).json({
             status: 'success',
-            message: 'Catatan berhasil diperbaharui',
+            message: 'Tugas berhasil diperbaharui',
             data: {
                 id: result,
             },
