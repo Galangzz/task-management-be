@@ -2,7 +2,7 @@ const mapTaskTabsToModel = (rows) => ({
     id: rows[0].id,
     name: rows[0].name,
     createdAt: rows[0].created_at,
-    deletePermission: rows[0].delete_permission,
+    deletePermission: Boolean(rows[0].delete_permission),
     tasks: rows
         .filter((r) => r.task_id)
         .map((row) => ({
@@ -11,10 +11,10 @@ const mapTaskTabsToModel = (rows) => ({
             detail: row.task_detail,
             createdAt: row.task_created_at,
             deadline: row.task_deadline,
-            hasDate: row.has_date,
-            hasTime: row.has_time,
-            starred: row.starred,
-            isCompleted: row.is_completed,
+            hasDate: Boolean(row.has_date),
+            hasTime: Boolean(row.has_time),
+            starred: Boolean(row.starred),
+            isCompleted: Boolean(row.is_completed),
         })),
 });
 
@@ -24,10 +24,10 @@ const mapTaskToModel = (row) => ({
     detail: row.detail,
     createdAt: row.created_at,
     deadline: row.deadline,
-    hasDate: row.has_date,
-    hasTime: row.has_time,
-    starred: row.starred,
-    isCompleted: row.is_completed,
+    hasDate: Boolean(row.has_date),
+    hasTime: Boolean(row.has_time),
+    starred: Boolean(row.starred),
+    isCompleted: Boolean(row.is_completed),
 });
 
 const toMySQLDateTime = (date) => {
@@ -52,4 +52,11 @@ const toMySQLDateTime = (date) => {
     }
 };
 
-module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel };
+const mapTabToModel = (rows) => ({
+    id: rows.id,
+    name: rows.name,
+    createdAt: rows.created_at,
+    deletePermission: Boolean(rows.delete_permission),
+});
+
+module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel, mapTabToModel };

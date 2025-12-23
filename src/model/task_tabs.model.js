@@ -1,5 +1,5 @@
 const db = require('../config/database');
-const { mapTaskTabsToModel, mapTaskToModel } = require('../utils/index');
+const { mapTaskTabsToModel, mapTaskToModel, mapTabToModel } = require('../utils/index');
 
 const TaskTabModel = {
     addTaskTab: async (id, name) => {
@@ -53,9 +53,9 @@ const TaskTabModel = {
         return result;
     },
     getAllTaskTabs: async () => {
-        const sql = 'SELECT * FROM task_tabs ORDER BY created_at';
+        const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs ORDER BY created_at';
         const [rows] = await db.execute(sql);
-        return rows;
+        return rows.map(mapTabToModel);
     },
     getDeletePermissionTaskTabs: async (id) => {
         const sql = 'SELECT delete_permission AS permission FROM task_tabs WHERE id = ?';

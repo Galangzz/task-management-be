@@ -24,6 +24,11 @@ const errorHandler = (err, req, res, next) => {
         err.message = 'Data tidak valid';
     }
 
+    if (err.code === 'ER_DATA_TOO_LONG'){
+        err.statusCode = 400;
+        err.message= 'To Long'
+    }
+
     if (err instanceof ClientError) {
         if (process.env.NODE_ENV === 'development') {
             return res.status(err.statusCode).json({
