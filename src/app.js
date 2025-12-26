@@ -2,16 +2,18 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const errorHandler = require('./middlewares/errorHandler');
 const notFoundHandler = require('./middlewares/notFoundPathHandler');
 
 const TaskTabRoutes = require('./routes/task_tabs.routes');
 const TaskRoutes = require('./routes/tasks.routes');
+const UserRoutes = require('./routes/users.routes');
 
 const app = express();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 const host = process.env.HOST;
 
 app.use(express.json());
@@ -22,6 +24,9 @@ app.use(
         allowedHeaders: ['Content-Type'],
     })
 );
+// app.use(cookieParser());
+
+app.use('/api/users', UserRoutes);
 
 app.use('/api/task-tabs', TaskTabRoutes);
 app.use('/api/tasks', TaskRoutes);
