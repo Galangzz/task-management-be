@@ -40,9 +40,9 @@ const UserModel = {
             throw new InvariantError('Email sudah pernah didaftarkan');
         }
     },
-    verifyUserCredentials: async (username, password) => {
-        const sql = 'SELECT id, password FROM users WHERE username = ?';
-        const values = [username];
+    verifyUserCredentials: async (email, password) => {
+        const sql = 'SELECT id, password FROM users WHERE email = ?';
+        const values = [email];
 
         const [rows] = await db.execute(sql, values);
         if (rows.length === 0) {

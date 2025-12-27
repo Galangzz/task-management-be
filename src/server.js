@@ -11,6 +11,7 @@ const notFoundHandler = require('./middlewares/notFoundPathHandler');
 const TaskTabRoutes = require('./routes/taskTabsRoutes');
 const TaskRoutes = require('./routes/tasksRoutes');
 const UserRoutes = require('./routes/usersRoutes');
+const AuthRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -22,7 +23,7 @@ const limiter = rateLimit({
     limit: 100,
     message: 'Terlalu banyak permintaan, silakan coba lagi nanti.',
     standardHeaders: true,
-    legacyHeaders: false, 
+    legacyHeaders: false,
 });
 
 app.use(limiter);
@@ -35,9 +36,10 @@ app.use(
         allowedHeaders: ['Content-Type'],
     })
 );
-// app.use(cookieParser());
+app.use(cookieParser());
 
 app.use('/api/users', UserRoutes);
+app.use('/api/auth', AuthRoutes);
 
 app.use('/api/task-tabs', TaskTabRoutes);
 app.use('/api/tasks', TaskRoutes);
