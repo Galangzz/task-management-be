@@ -24,8 +24,14 @@ const get = (key) => {
 
 const del = (key) => client.del(key);
 
+const exists = (key) => client.exists(key);
+
+const getTTL = (key) => client.ttl(key);
+
 module.exports = {
     set,
     get,
     del,
+    exists,
+    getTTL,
 };
