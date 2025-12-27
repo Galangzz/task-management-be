@@ -1,7 +1,20 @@
 const db = require('../config/database');
+const AuthorizationError = require('../exceptions/AuthorizationError');
+const InvariantError = require('../exceptions/InvariantError');
+const NotFoundError = require('../exceptions/NotFoundError');
 const { mapTaskTabsToModel, mapTaskToModel, mapTabToModel } = require('../utils/index');
 
 const TaskTabModel = {
+    addMainTask: async (id, owner) => {
+        const sql = `INSERT INTO task_tabs(id, name, delete_permission, owner) 
+                    VALUES(?, ?, ?, ?)`;
+        const values = [id, 'Tugas Saya', false, owner];
+
+        const [rows] = await db.execute(sql, values);
+        if (rows.affectedRows === 0) {
+            throw new InvariantError('Gagal menambahkan tab awal');
+        }
+    },
     addTaskTab: async (id, name) => {
         const sql = 'INSERT INTO task_tabs(id, name) VALUES(?, ?)';
         const values = [id, name];
@@ -76,8 +89,25 @@ const TaskTabModel = {
     getStarredTaskTab: async (id) => {
         const sql = 'SELECT * FROM tasks WHERE starred = 1 AND is_completed = 0';
         const [rows] = await db.query(sql);
-        console.log({rows: rows[0]})
+        console.log({ rows: rows[0] });
         return rows.map(mapTaskToModel);
+    },
+    verifyTabOwner: async (id, owner) => {
+        const sql = `SELECT tb.owner 
+            FROM task_tabs tb 
+            JOIN users u ON tb.owner = u.id
+            WHERE tb.id = ?`;
+        const values = [id];
+
+        const [rows] = await db.execute(sql, values);
+        if (!rows.length) {
+            throw new NotFoundError('Tab tidak ditemukan');
+        }
+
+        const tab = rows[0];
+        if (tab.owner !== owner) {
+            throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
+        }
     },
 };
 

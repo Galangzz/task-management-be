@@ -1,6 +1,8 @@
 const UserModel = require('../model/usersModel');
 const UserService = require('../service/usersService');
 const bcrypt = require('bcrypt');
+const TabModel = require('../model/taskTabsModel');
+const { nanoid } = require('nanoid');
 
 async function signupUserController(req, res, next) {
     const { username, email, password } = req.body;
@@ -38,6 +40,11 @@ async function verifyOTPController(req, res, next) {
         });
 
         await UserService.deleteUserData(email);
+
+        // Add initial tab
+        const id = `tab-${nanoid(16)}`;
+        await TabModel.addMainTask(id, userId);
+
         res.status(201).json({
             status: 'success',
             message: `Regristrasi berhasil ${email}`,
