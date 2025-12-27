@@ -1,9 +1,10 @@
+const AuthenticationError = require('../exceptions/AuthenticationError');
 const TokenManager = require('../utils/tokenize/TokenManager');
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ message: 'Authentication required' });
+        throw new AuthenticationError('Authentications required');
     }
 
     const token = authHeader.split(' ')[1];
@@ -13,6 +14,6 @@ module.exports = (req, res, next) => {
         req.user = payload;
         next();
     } catch (error) {
-        next(err);
+        next(error);
     }
 };

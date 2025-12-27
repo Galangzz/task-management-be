@@ -5,12 +5,11 @@ const InvariantError = require('../exceptions/InvariantError');
 const AuthenticationError = require('../exceptions/AuthenticationError');
 
 const UserModel = {
-    addUser: async ({ username, email, password }) => {
-        await UserModel.verifyNewUsername(username);
-        await UserModel.verifyNewEmail(email);
+    addUser: async ({ username, email, hashedPassword }) => {
+        // await UserModel.verifyNewUsername(username);
+        // await UserModel.verifyNewEmail(email);
 
         const id = `user-${nanoid(16)}`;
-        const hashedPassword = await bcrypt.hash(password, 10);
 
         const sql = 'INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)';
         const values = [id, username, email, hashedPassword];
@@ -41,9 +40,9 @@ const UserModel = {
             throw new InvariantError('Email sudah pernah didaftarkan');
         }
     },
-    verifyUserCredentials: async (username, password) => {
-        const sql = 'SELECT id, password FROM users WHERE username = ?';
-        const values = [username];
+    verifyUserCredentials: async (email, password) => {
+        const sql = 'SELECT id, password FROM users WHERE email = ?';
+        const values = [email];
 
         const [rows] = await db.execute(sql, values);
         if (rows.length === 0) {

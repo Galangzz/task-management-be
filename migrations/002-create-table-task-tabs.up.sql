@@ -2,5 +2,6 @@ CREATE TABLE IF NOT EXISTS task_tabs (
     id VARCHAR(50) NOT NULL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    delete_permission BOOLEAN DEFAULT true
+    delete_permission BOOLEAN DEFAULT true,
+    owner VARCHAR(50) NOT NULL
 )

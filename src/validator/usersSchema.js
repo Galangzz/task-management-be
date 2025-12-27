@@ -9,4 +9,11 @@ const userSchema = Joi.object({
     repeatPassword: Joi.ref('password'),
 });
 
-module.exports = { userSchema };
+const verifyRegister = Joi.object({
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
+        .required(),
+    otp: Joi.string().trim().length(6).required(),
+});
+
+module.exports = { userSchema, verifyRegister };

@@ -1,0 +1,5 @@
+ALTER TABLE task_tabs
+ADD CONSTRAINT fk_users_task_tabs
+FOREIGN KEY (owner) REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;
