@@ -1,5 +1,5 @@
 const express = require('express');
-const TaskController = require('../controllers/tasks.controller');
+const TaskController = require('../controllers/tasksController');
 const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 const { validate } = require('../middlewares/validate');
 const {
@@ -7,7 +7,7 @@ const {
     postTaskSchema,
     patchTaskBodySchema,
     patchTaskParamsSchema,
-} = require('../validator/tasks.schema');
+} = require('../validator/tasksSchema');
 
 const router = express.Router();
 

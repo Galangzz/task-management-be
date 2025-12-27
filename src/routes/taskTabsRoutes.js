@@ -1,8 +1,8 @@
 const express = require('express');
-const TaskTabsController = require('../controllers/task_tabs.controller');
+const TaskTabsController = require('../controllers/taskTabsController');
 const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 const { validate } = require('../middlewares/validate');
-const { postTaskTabsSchema, idTaskSchema } = require('../validator/task-tabs.schema');
+const { postTaskTabsSchema, idTaskSchema } = require('../validator/taskTabsSchema');
 
 const router = express.Router();
 

@@ -1,17 +1,22 @@
 const express = require('express');
 const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
-const UsersController = require('../controllers/users.controller');
+const UsersController = require('../controllers/usersController');
 
 const { validate } = require('../middlewares/validate');
-const { userSchema } = require('../validator/users.schema');
+const { userSchema, verifyRegister } = require('../validator/usersSchema');
 
 const router = express.Router();
 
 // /api/users
 
 router
-    .route('/')
-    .post(validate(userSchema, 'body'), UsersController.postUserController)
+    .route('/signup')
+    .post(validate(userSchema, 'body'), UsersController.signupUserController)
+    .all(methodNotAllowed(['POST']));
+
+router
+    .route('/verify-signup')
+    .post(validate(verifyRegister, 'body'), UsersController.verifyOTPController)
     .all(methodNotAllowed(['POST']));
 
 module.exports = router;
