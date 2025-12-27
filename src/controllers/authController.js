@@ -32,7 +32,7 @@ async function postAuthController(req, res, next) {
 }
 
 async function putAuthController(req, res, next) {
-    const { refreshToken } = req.cookies;
+    const { jwt: refreshToken } = req.cookies;
     try {
         await AuthModel.verifyRefreshToken(refreshToken);
         const { id } = token.verifyRefreshToken(refreshToken);
@@ -52,7 +52,7 @@ async function putAuthController(req, res, next) {
 }
 
 async function deleteAuthController(req, res, next) {
-    const { refreshToken } = req.cookies;
+    const { jwt: refreshToken } = req.cookies;
     try {
         await AuthModel.verifyRefreshToken(refreshToken);
         await AuthModel.deleteRefreshToken(refreshToken);

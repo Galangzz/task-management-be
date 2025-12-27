@@ -7,6 +7,7 @@ const { rateLimit } = require('express-rate-limit');
 
 const errorHandler = require('./middlewares/errorHandler');
 const notFoundHandler = require('./middlewares/notFoundPathHandler');
+const authHandler = require('./middlewares/authHandler');
 
 const TaskTabRoutes = require('./routes/taskTabsRoutes');
 const TaskRoutes = require('./routes/tasksRoutes');
@@ -40,6 +41,8 @@ app.use(cookieParser());
 
 app.use('/api/users', UserRoutes);
 app.use('/api/auth', AuthRoutes);
+
+app.use(authHandler);
 
 app.use('/api/task-tabs', TaskTabRoutes);
 app.use('/api/tasks', TaskRoutes);
