@@ -1,6 +1,6 @@
 const { nanoid } = require('nanoid');
 const InvariantError = require('../exceptions/InvariantError');
-const TaskModel = require('../model/tasks.model');
+const TaskModel = require('../model/tasksModel');
 
 async function getTaskController(req, res, next) {
     const { id } = req.body;

@@ -1,4 +1,4 @@
-const UserModel = require('../model/users.model');
+const UserModel = require('../model/usersModel');
 
 async function postUserController(req, res, next) {
     const { username, email, password } = req.body;
