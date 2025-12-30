@@ -12,7 +12,7 @@ const putAuthSchema = Joi.object({
 });
 
 const deleteAuthSchema = Joi.object({
-    jwt: Joi.string().required(),
+    accessToken: Joi.string().required(),
 });
 
 module.exports = { postAuthSchema, putAuthSchema, deleteAuthSchema };

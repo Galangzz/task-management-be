@@ -4,7 +4,7 @@ const TokenManager = require('../utils/tokenize/TokenManager');
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        throw new AuthenticationError('Authentications required');
+        throw new AuthenticationError('Unauthenticated');
     }
 
     const token = authHeader.split(' ')[1];

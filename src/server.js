@@ -25,19 +25,22 @@ const limiter = rateLimit({
     message: 'Terlalu banyak permintaan, silakan coba lagi nanti.',
     standardHeaders: true,
     legacyHeaders: false,
+    // skip: (req) => req.method === 'OPTIONS',
 });
 
-app.use(limiter);
-
-app.use(express.json());
-app.use(morgan('dev'));
 app.use(
     cors({
-        origin: '*',
-        allowedHeaders: ['Content-Type'],
+        origin: 'http://localhost:5173',
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     })
 );
+app.use(limiter);
+app.use(morgan('dev'));
 app.use(cookieParser());
+
+app.use(express.json());
 
 app.use('/api/users', UserRoutes);
 app.use('/api/auth', AuthRoutes);

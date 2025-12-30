@@ -5,7 +5,7 @@ const userSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
         .required(),
-    password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
+    password: Joi.string().pattern(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/)).required(),
     repeatPassword: Joi.ref('password'),
 });
 
