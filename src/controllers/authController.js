@@ -31,7 +31,7 @@ async function postAuthController(req, res, next) {
     }
 }
 
-async function putAuthController(req, res, next) {
+async function getNewAccessToken(req, res, next) {
     const { jwt: refreshToken } = req.cookies;
     try {
         await AuthModel.verifyRefreshToken(refreshToken);
@@ -57,13 +57,20 @@ async function deleteAuthController(req, res, next) {
         await AuthModel.verifyRefreshToken(refreshToken);
         await AuthModel.deleteRefreshToken(refreshToken);
 
-        res.status(200).json({
-            status: 'success',
-            message: 'Refresh token berhasil dihapus',
-        });
+        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+        res.sendStatus(204);
     } catch (error) {
         next(error);
     }
 }
 
-module.exports = { postAuthController, putAuthController, deleteAuthController };
+async function getMe(req, res) {
+    const { id } = req.user;
+    res.status(200).json({
+        data: {
+            id: id,
+        },
+    });
+}
+
+module.exports = { postAuthController, getNewAccessToken, deleteAuthController, getMe };

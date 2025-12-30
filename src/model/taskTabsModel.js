@@ -15,16 +15,16 @@ const TaskTabModel = {
             throw new InvariantError('Gagal menambahkan tab awal');
         }
     },
-    addTaskTab: async (id, name) => {
-        const sql = 'INSERT INTO task_tabs(id, name) VALUES(?, ?)';
-        const values = [id, name];
+    addTaskTab: async (id, name, ownerId) => {
+        const sql = 'INSERT INTO task_tabs(id, name, owner) VALUES(?, ?, ?)';
+        const values = [id, name, ownerId];
 
         const [rows] = await db.execute(sql, values);
         return rows.affectedRows > 0;
     },
-    getTaskTabByName: async (name) => {
-        const sql = 'SELECT name FROM task_tabs WHERE name = ?';
-        const values = [name];
+    getTaskTabByName: async (name, ownerId) => {
+        const sql = 'SELECT name FROM task_tabs WHERE name = ? AND owner = ?';
+        const values = [name, ownerId];
 
         const [rows] = await db.execute(sql, values);
         return rows.length > 0 ? rows[0] : null;
@@ -32,6 +32,13 @@ const TaskTabModel = {
     getTaskTabById: async (id) => {
         const sql = 'SELECT * FROM task_tabs WHERE id = ?';
         const values = [id];
+        const [rows] = await db.execute(sql, values);
+        return rows.length > 0 ? rows[0] : null;
+    },
+    getTaskTabByIdMainTask: async (id, owner) => {
+        const sql = `SELECT * FROM task_tabs WHERE delete_permission = 0 AND owner = ?`;
+        const values = [owner];
+
         const [rows] = await db.execute(sql, values);
         return rows.length > 0 ? rows[0] : null;
     },
@@ -65,9 +72,40 @@ const TaskTabModel = {
         const result = mapTaskTabsToModel(rows);
         return result;
     },
-    getAllTaskTabs: async () => {
-        const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs ORDER BY created_at';
-        const [rows] = await db.execute(sql);
+    getMainTaskTab: async (ownerId) => {
+        const sql = `
+            SELECT
+                tb.id,
+                tb.name,
+                tb.created_at,
+                tb.delete_permission,
+                t.id as task_id,
+                t.title as task_title,
+                t.detail as task_detail,
+                t.created_at as task_created_at,
+                t.deadline as task_deadline,
+                t.has_date,
+                t.has_time,
+                t.starred,
+                t.is_completed
+            FROM task_tabs tb
+            LEFT JOIN tasks t ON tb.id = t.task_tabs_id
+            WHERE tb.owner = ? AND delete_permission = 0
+        `;
+        const values = [ownerId];
+
+        const [rows] = await db.execute(sql, values);
+        if (!rows.length) {
+            throw new NotFoundError('Tab tidak ditemukan');
+        }
+
+        const result = mapTaskTabsToModel(rows);
+        return result;
+    },
+    getAllTaskTabs: async (ownerId) => {
+        const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs WHERE owner = ? ORDER BY created_at';
+        const values = [ownerId];
+        const [rows] = await db.execute(sql, values);
         return rows.map(mapTabToModel);
     },
     getDeletePermissionTaskTabs: async (id) => {
@@ -87,8 +125,11 @@ const TaskTabModel = {
         return rows.affectedRows > 0;
     },
     getStarredTaskTab: async (id) => {
-        const sql = 'SELECT * FROM tasks WHERE starred = 1 AND is_completed = 0';
-        const [rows] = await db.query(sql);
+        const sql = `SELECT tk.* FROM tasks tk 
+            JOIN task_tabs tb ON tb.id = tk.task_tabs_id 
+            WHERE tb.owner = ? AND tk.starred = 1 AND tk.is_completed = 0`;
+        const values = [id];
+        const [rows] = await db.execute(sql, values);
         console.log({ rows: rows[0] });
         return rows.map(mapTaskToModel);
     },
