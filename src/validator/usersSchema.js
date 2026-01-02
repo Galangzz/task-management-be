@@ -5,7 +5,9 @@ const userSchema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
         .required(),
-    password: Joi.string().pattern(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$/)).required(),
+    password: Joi.string()
+        .pattern(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,30}$/))
+        .required(),
     repeatPassword: Joi.ref('password'),
 });
 
@@ -16,4 +18,10 @@ const verifyRegister = Joi.object({
     otp: Joi.string().trim().length(6).required(),
 });
 
-module.exports = { userSchema, verifyRegister };
+const verifyResendOtp = Joi.object({
+    email: Joi.string()
+        .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
+        .required(),
+});
+
+module.exports = { userSchema, verifyRegister, verifyResendOtp };

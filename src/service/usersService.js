@@ -2,6 +2,8 @@ const redis = require('../service/redis/CacheService');
 const mq = require('../service/rabbitmq/ProducerService');
 const InvariantError = require('../exceptions/InvariantError');
 
+const mailSender = require('../service/mail');
+
 const OTP_TTL = 300; // 5 menit
 const RESEND_TTL = 600; // 10 menit
 const COOLDOWN_TTL = 60; // 60 detik
@@ -34,7 +36,8 @@ async function sendOTP(email) {
 
     await redis.set(cooldownKey, '1', COOLDOWN_TTL);
 
-    await mq.sendMessage(queueMQ, JSON.stringify({ email: email, otp: otp }));
+    // await mq.sendMessage(queueMQ, JSON.stringify({ email: email, otp: otp }));
+    await mailSender.sendMail(email, otp)
 }
 
 async function verifyOTP(email, inputOTP) {
