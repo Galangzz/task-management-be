@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const AuthorizationError = require('../../exceptions/AuthorizationError');
 const InvariantError = require('../../exceptions/InvariantError');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
 
 const TokenManager = {
     generateAccessToken: (payload) =>
@@ -17,7 +18,7 @@ const TokenManager = {
         try {
             return jwt.verify(accessToken, process.env.ACCESS_TOKEN_KEY);
         } catch (error) {
-            throw new AuthorizationError('Access token tidak valid');
+            throw new AuthenticationError('Access token tidak valid');
         }
     },
     verifyRefreshToken: (refreshToken) => {
