@@ -57,4 +57,18 @@ async function verifyOTPController(req, res, next) {
     }
 }
 
-module.exports = { signupUserController, verifyOTPController };
+async function resendOTPController(req, res, next) {
+    const { email } = req.body;
+
+    try {
+        await UserService.sendOTP(email);
+        res.status(200).json({
+            status: 'success',
+            message: 'OTP berhasil dikirim, silahkan cek email',
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { signupUserController, verifyOTPController, resendOTPController};

@@ -59,6 +59,15 @@ const UserModel = {
 
         return id;
     },
+    verifyUser: async (id) => {
+        const sql = 'SELECT id FROM users WHERE id = ?';
+        const values = [id];
+
+        const [rows] = await db.execute(sql, values);
+        if (rows.length === 0) {
+            throw new AuthenticationError('User tidak ditemukan');
+        }
+    }
 };
 
 module.exports = UserModel;
