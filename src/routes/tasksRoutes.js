@@ -7,6 +7,9 @@ const {
     postTaskSchema,
     patchTaskBodySchema,
     patchTaskParamsSchema,
+    getTaskById,
+    putTaskBodySchema,
+    putTaskParamsSchema,
 } = require('../validator/tasksSchema');
 
 const router = express.Router();
@@ -21,11 +24,13 @@ router
 
 router
     .route('/:id')
+    .get(validate(getTaskById, 'params'), TaskController.getTaskByIdController)
     .patch(
         validate(patchTaskParamsSchema, 'params'),
         validate(patchTaskBodySchema, 'body'),
         TaskController.patchTaskController
     )
-    .all(methodNotAllowed(['PATCH']));
+    .put(validate(putTaskParamsSchema, 'params'), validate(putTaskBodySchema, 'body'), TaskController.putTaskController)
+    .all(methodNotAllowed(['GET', 'PATCH', 'PUT']));
 
 module.exports = router;

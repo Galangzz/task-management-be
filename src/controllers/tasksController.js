@@ -1,7 +1,7 @@
 const { nanoid } = require('nanoid');
 const InvariantError = require('../exceptions/InvariantError');
-const TaskModel = require('../model/tasksModel');
-const TabModel = require('../model/taskTabsModel');
+const TaskModel = require('../model/Task');
+const TabModel = require('../model/Tab');
 
 async function getTaskController(req, res, next) {
     const { id } = req.body;
@@ -9,7 +9,7 @@ async function getTaskController(req, res, next) {
     console.log(id);
     try {
         await TaskModel.verifyTaskOwner(id, credentialId);
-        const data = await TaskModel.getTaskByIdModel(id);
+        const data = await TaskModel.getTasksByIdTab(id);
 
         if (!data) {
             throw new InvariantError('Tugas tidak ditemukan');
@@ -81,8 +81,8 @@ async function patchTaskController(req, res, next) {
     }
 
     try {
-        await TaskModel.verifyTaskOwner(id, credentialId)
-        
+        await TaskModel.verifyTaskOwner(id, credentialId);
+
         const result = await TaskModel.updateTaskModel(id, field, values);
 
         if (!result) {
@@ -101,8 +101,61 @@ async function patchTaskController(req, res, next) {
     }
 }
 
+async function getTaskByIdController(req, res, next) {
+    const { id } = req.params;
+
+    try {
+        const result = await TaskModel.getTaskById(id);
+
+        res.status(200).json({
+            status: 'success',
+            data: result,
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+async function putTaskController(req, res, next) {
+    const { id: ownerId } = req.user;
+    const { id } = req.params;
+    const { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId } = req.body;
+    try {
+        await TaskModel.verifyTaskOwner(id, ownerId);
+        const field = [
+            'title = ?',
+            'detail = ?',
+            'deadline = ?',
+            'has_date = ?',
+            'has_time = ?',
+            'starred = ?',
+            'is_completed = ?',
+            'task_tabs_id = ?',
+        ];
+        const values = [title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId];
+
+        const result = await TaskModel.updateTaskModel(id, field, values);
+
+        if (!result) {
+            throw new InvariantError('Gagal memperbarui tugas');
+        }
+
+        res.status(200).json({
+            status: 'success',
+            message: 'Tugas berhasil diperbaharui',
+            data: {
+                id: result,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
 module.exports = {
     getTaskController,
     postTaskController,
     patchTaskController,
+    getTaskByIdController,
+    putTaskController,
 };

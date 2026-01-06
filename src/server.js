@@ -36,10 +36,9 @@ app.use(
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     })
 );
-app.use(limiter);
+// app.use(limiter);
 app.use(morgan('dev'));
 app.use(cookieParser());
-
 app.use(express.json());
 
 app.use('/api/users', UserRoutes);

@@ -15,6 +15,7 @@ const mapTaskTabsToModel = (rows) => ({
             hasTime: Boolean(row.has_time),
             starred: Boolean(row.starred),
             isCompleted: Boolean(row.is_completed),
+            taskTabId: row.task_tabs_id,
         })),
 });
 
@@ -28,6 +29,7 @@ const mapTaskToModel = (row) => ({
     hasTime: Boolean(row.has_time),
     starred: Boolean(row.starred),
     isCompleted: Boolean(row.is_completed),
+    taskTabId: row.task_tabs_id,
 });
 
 const toMySQLDateTime = (date) => {

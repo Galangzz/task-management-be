@@ -1,6 +1,6 @@
 const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
-const TaskTabsModel = require('../model/taskTabsModel');
+const TaskTabsModel = require('../model/Tab');
 const { nanoid } = require('nanoid');
 
 async function postTaskTabsHandler(req, res, next) {

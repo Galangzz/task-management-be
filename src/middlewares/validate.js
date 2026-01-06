@@ -18,7 +18,7 @@ const validate =
             });
         }
 
-        req[property] = value; // data sudah bersih
+        req[property] = value; 
         next();
     };
 

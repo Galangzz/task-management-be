@@ -1,22 +1,27 @@
 const redis = require('../service/redis/CacheService');
-const mq = require('../service/rabbitmq/ProducerService');
-const InvariantError = require('../exceptions/InvariantError');
-
 const mailSender = require('../service/mail');
+
+const InvariantError = require('../exceptions/InvariantError');
 
 const OTP_TTL = 300; // 5 menit
 const RESEND_TTL = 600; // 10 menit
 const COOLDOWN_TTL = 60; // 60 detik
 const MAX_RESEND = 3;
 const MAX_ATTEMPT = 5;
-const queueMQ = 'send:otp:user:task-management';
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
+function _getKeys(email) {
+    return {
+        otpKey: `otp:signup:${email}`,
+        resendKey: `otp:resend:${email}`,
+        cooldownKey: `otp:cooldown:${email}`,
+        signupKey: `signup:data:${email}`,
+    };
+}
+
 async function sendOTP(email) {
-    const otpKey = `otp:signup:${email}`;
-    const resendKey = `otp:resend:${email}`;
-    const cooldownKey = `otp:cooldown:${email}`;
+    const { otpKey, resendKey, cooldownKey } = _getKeys(email);
 
     if (await redis.exists(cooldownKey)) {
         throw new InvariantError('Tunggu sebelum resend OTP', 429);
@@ -36,12 +41,11 @@ async function sendOTP(email) {
 
     await redis.set(cooldownKey, '1', COOLDOWN_TTL);
 
-    // await mq.sendMessage(queueMQ, JSON.stringify({ email: email, otp: otp }));
-    await mailSender.sendMail(email, otp)
+    await mailSender.sendMail(email, otp);
 }
 
 async function verifyOTP(email, inputOTP) {
-    const otpKey = `otp:signup:${email}`;
+    const { otpKey, resendKey } = _getKeys(email);
 
     const data = await redis.get(otpKey);
     if (!data) {
@@ -62,11 +66,11 @@ async function verifyOTP(email, inputOTP) {
     }
 
     await redis.del(otpKey);
-    await redis.del(`otp:resend:${email}`);
+    await redis.del(resendKey);
 }
 
 async function saveUserData({ username, email, password }) {
-    const signupKey = `signup:data:${email}`;
+    const { signupKey } = _getKeys(email);
 
     const data = {
         username,
@@ -78,7 +82,7 @@ async function saveUserData({ username, email, password }) {
 }
 
 async function getUserData(email) {
-    const signupKey = `signup:data:${email}`;
+    const { signupKey } = _getKeys(email);
 
     const data = await redis.get(signupKey);
 
@@ -86,7 +90,7 @@ async function getUserData(email) {
 }
 
 async function deleteUserData(email) {
-    const signupKey = `signup:data:${email}`;
+    const { signupKey } = _getKeys(email);
 
     await redis.del(signupKey);
 }

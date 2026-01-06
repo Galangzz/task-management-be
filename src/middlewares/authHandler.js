@@ -1,5 +1,5 @@
 const AuthenticationError = require('../exceptions/AuthenticationError');
-const UserModel = require('../model/usersModel');
+const UserModel = require('../model/User');
 const TokenManager = require('../utils/tokenize/TokenManager');
 
 module.exports = async (req, res, next) => {
