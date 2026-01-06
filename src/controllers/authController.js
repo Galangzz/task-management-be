@@ -1,5 +1,5 @@
 const AuthModel = require('../model/authModel');
-const UserModel = require('../model/usersModel');
+const UserModel = require('../model/User');
 const token = require('../utils/tokenize/TokenManager');
 
 async function postAuthController(req, res, next) {

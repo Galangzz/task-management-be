@@ -5,7 +5,7 @@ const getAllTasksSchema = Joi.object({
 });
 
 const postTaskSchema = Joi.object({
-    title: Joi.string().trim().required(),
+    title: Joi.string().trim().empty('').default(null),
     detail: Joi.string().trim().empty('').default(null),
     deadline: Joi.date().iso().allow(null),
     hasDate: Joi.boolean().required(),
@@ -32,4 +32,31 @@ const patchTaskBodySchema = Joi.object({
     return value;
 }, 'At least one boolean value is required');
 
-module.exports = { getAllTasksSchema, postTaskSchema, patchTaskBodySchema, patchTaskParamsSchema };
+const getTaskById = Joi.object({
+    id: Joi.string().trim().required(),
+});
+
+const putTaskParamsSchema = Joi.object({
+    id: Joi.string().trim().required(),
+});
+
+const putTaskBodySchema = Joi.object({
+    title: Joi.string().trim().empty('').default(null),
+    detail: Joi.string().trim().empty('').default(null),
+    deadline: Joi.date().iso().allow(null),
+    hasDate: Joi.boolean().required(),
+    hasTime: Joi.boolean().required(),
+    starred: Joi.boolean().required(),
+    isCompleted: Joi.boolean().required(),
+    taskTabId: Joi.string().trim().required(),
+});
+
+module.exports = {
+    getAllTasksSchema,
+    postTaskSchema,
+    patchTaskBodySchema,
+    patchTaskParamsSchema,
+    getTaskById,
+    putTaskParamsSchema,
+    putTaskBodySchema,
+};

@@ -1,8 +1,10 @@
-const UserModel = require('../model/usersModel');
-const UserService = require('../service/usersService');
 const bcrypt = require('bcrypt');
-const TabModel = require('../model/taskTabsModel');
 const { nanoid } = require('nanoid');
+
+const UserModel = require('../model/User');
+const UserService = require('../service/usersService');
+
+const TabModel = require('../model/Tab');
 
 async function signupUserController(req, res, next) {
     const { username, email, password } = req.body;
@@ -71,4 +73,4 @@ async function resendOTPController(req, res, next) {
     }
 }
 
-module.exports = { signupUserController, verifyOTPController, resendOTPController};
+module.exports = { signupUserController, verifyOTPController, resendOTPController };

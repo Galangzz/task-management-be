@@ -1,0 +1,80 @@
+// const db = require('../config/database');
+
+// const { nanoid } = require('nanoid');
+// const bcrypt = require('bcrypt');
+
+// const InvariantError = require('../exceptions/InvariantError');
+// const AuthenticationError = require('../exceptions/AuthenticationError');
+
+// async function addUser({ username, email, hashedPassword }) {
+//     const id = `user-${nanoid(16)}`;
+
+//     const sql = 'INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)';
+//     const values = [id, username, email, hashedPassword];
+
+//     const [rows] = await db.execute(sql, values);
+
+//     if (rows.affectedRows !== 1) {
+//         throw new InvariantError('User gagal ditambahkan');
+//     }
+
+//     return id;
+// }
+
+// async function verifyNewUsername(username) {
+//     const sql = 'SELECT username FROM users WHERE username = ?';
+//     const values = [username];
+
+//     const [rows] = await db.execute(sql, values);
+//     if (rows.length > 0) {
+//         throw new InvariantError('Username telah digunakan');
+//     }
+// }
+
+// async function verifyNewEmail(email) {
+//     const sql = 'SELECT email FROM users WHERE email = ?';
+//     const values = [email];
+
+//     const [rows] = await db.execute(sql, values);
+//     if (rows.length > 0) {
+//         throw new InvariantError('Email sudah pernah didaftarkan');
+//     }
+// }
+
+// async function verifyUserCredentials(email, password) {
+//     const sql = 'SELECT id, password FROM users WHERE email = ?';
+//     const values = [email];
+
+//     const [rows] = await db.execute(sql, values);
+//     if (rows.length === 0) {
+//         throw new AuthenticationError('Email atau Password salah');
+//     }
+
+//     const { id, password: hashedPassword } = rows[0];
+
+//     const match = await bcrypt.compare(password, hashedPassword);
+
+//     if (!match) {
+//         throw new AuthenticationError('Email atau Password salah');
+//     }
+
+//     return id;
+// }
+
+// async function verifyUser(id) {
+//     const sql = 'SELECT id FROM users WHERE id = ?';
+//     const values = [id];
+
+//     const [rows] = await db.execute(sql, values);
+//     if (rows.length === 0) {
+//         throw new AuthenticationError('User tidak ditemukan');
+//     }
+// }
+
+// module.exports = {
+//     addUser,
+//     verifyNewUsername,
+//     verifyNewEmail,
+//     verifyUserCredentials,
+//     verifyUser,
+// };
