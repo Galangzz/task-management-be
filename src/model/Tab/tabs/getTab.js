@@ -1,6 +1,6 @@
 const db = require('../../../config/database');
 const NotFoundError = require('../../../exceptions/NotFoundError');
-const { mapTabToModel, mapTaskTabsToModel } = require('../../../utils');
+const { mapTabToModel, mapTaskTabsToModel, mapTaskToModel } = require('../../../utils');
 
 const getTaskTabById = async (id) => {
     const sql = 'SELECT * FROM task_tabs WHERE id = ?';
@@ -96,6 +96,16 @@ const getDeletePermissionTaskTabs = async (id) => {
     return rows.length > 0 ? rows[0].permission : null;
 };
 
+const getStarredTaskTab = async (id) => {
+    const sql = `SELECT tk.* FROM tasks tk 
+            JOIN task_tabs tb ON tb.id = tk.task_tabs_id 
+            WHERE tb.owner = ? AND tk.starred = 1 AND tk.is_completed = 0`;
+    const values = [id];
+    const [rows] = await db.execute(sql, values);
+    console.log({ rows: rows[0] });
+    return rows.map(mapTaskToModel);
+};
+
 module.exports = {
     getTaskTabById,
     getTaskTabByIdMainTask,
@@ -103,4 +113,5 @@ module.exports = {
     getMainTaskTab,
     getAllTaskTabs,
     getDeletePermissionTaskTabs,
+    getStarredTaskTab,
 };

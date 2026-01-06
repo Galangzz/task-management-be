@@ -1,4 +1,5 @@
 const db = require('../../../config/database');
+const bcrypt = require('bcrypt');
 const AuthenticationError = require('../../../exceptions/AuthenticationError');
 const InvariantError = require('../../../exceptions/InvariantError');
 

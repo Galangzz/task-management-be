@@ -5,7 +5,7 @@ const getAllTasksSchema = Joi.object({
 });
 
 const postTaskSchema = Joi.object({
-    title: Joi.string().trim().required(),
+    title: Joi.string().trim().empty('').default(null),
     detail: Joi.string().trim().empty('').default(null),
     deadline: Joi.date().iso().allow(null),
     hasDate: Joi.boolean().required(),
@@ -41,7 +41,7 @@ const putTaskParamsSchema = Joi.object({
 });
 
 const putTaskBodySchema = Joi.object({
-    title: Joi.string().trim().empty(''),
+    title: Joi.string().trim().empty('').default(null),
     detail: Joi.string().trim().empty('').default(null),
     deadline: Joi.date().iso().allow(null),
     hasDate: Joi.boolean().required(),
