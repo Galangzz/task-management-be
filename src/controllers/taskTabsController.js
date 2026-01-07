@@ -2,12 +2,14 @@ const InvariantError = require('../exceptions/InvariantError');
 const NotFoundError = require('../exceptions/NotFoundError');
 const TaskTabsModel = require('../models/Tab');
 const { nanoid } = require('nanoid');
+const { toMySQLDateTime } = require('../utils');
 
 async function postTaskTabsHandler(req, res) {
     const { name } = req.body;
     const { id: ownerId } = req.user;
 
     const id = `tab-${nanoid(16)}`;
+    const createdAt = new Date().toISOString();
 
     const existingTab = await TaskTabsModel.getTaskTabByName(name, ownerId);
 
@@ -15,7 +17,7 @@ async function postTaskTabsHandler(req, res) {
         throw new InvariantError('Judul tidak boleh duplikat');
     }
 
-    const result = await TaskTabsModel.addTaskTab(id, name, ownerId);
+    const result = await TaskTabsModel.addTaskTab(id, name, toMySQLDateTime(createdAt), ownerId);
 
     if (!result) {
         throw new InvariantError('Gagal menambahkan task tab');
@@ -24,7 +26,7 @@ async function postTaskTabsHandler(req, res) {
     res.status(201).json({
         status: 'success',
         message: 'Berhasil menambahkan task tab',
-        data: { id, name },
+        data: { id, name, createdAt, deletePermission: true },
     });
 }
 async function getTaskTabById(req, res) {

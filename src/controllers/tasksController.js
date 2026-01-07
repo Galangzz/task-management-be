@@ -3,22 +3,26 @@ const InvariantError = require('../exceptions/InvariantError');
 const TaskModel = require('../models/Task');
 const TabModel = require('../models/Tab');
 
-async function getTaskController(req, res) {
-    const { id } = req.body;
+async function getTasksController(req, res) {
+    const { tabId } = req.query;
     const { id: credentialId } = req.user;
-    console.log(id);
-
-    await TaskModel.verifyTaskOwner(id, credentialId);
-    const data = await TaskModel.getTasksByIdTab(id);
-
-    if (!data) {
-        throw new InvariantError('Tugas tidak ditemukan');
+    let data;
+    if (tabId === 'starred-task') {
+        data = await TaskModel.get(credentialId);
+    } else {
+        // await TaskModel.verifyTaskOwner(tabId, credentialId);
+        await TabModel.verifyTabOwner(tabId, credentialId);
+        data = await TaskModel.getTasksByIdTab(tabId);
     }
+
+    // if (!data) {
+    //     throw new InvariantError('Tugas tidak ditemukan');
+    // }
 
     res.status(200).json({
         status: 'success',
         message: 'Berhasil mendapatkan tugas',
-        data,
+        data: data ? (Array.isArray(data) ? data : [data]) : [],
     });
 }
 
@@ -134,7 +138,7 @@ async function putTaskController(req, res) {
 }
 
 module.exports = {
-    getTaskController,
+    getTasksController,
     postTaskController,
     patchTaskController,
     getTaskByIdController,

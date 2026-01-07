@@ -19,7 +19,7 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(validate(getAllTasksSchema, 'body'), asyncHandler(TaskController.getTaskController))
+    .get(validate(getAllTasksSchema, 'query'), asyncHandler(TaskController.getTasksController))
     .post(validate(postTaskSchema, 'body'), asyncHandler(TaskController.postTaskController))
     .all(methodNotAllowed(['GET', 'POST']));
 

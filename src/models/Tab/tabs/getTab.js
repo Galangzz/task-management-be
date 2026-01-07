@@ -106,6 +106,14 @@ const getStarredTaskTab = async (id) => {
     return rows.map(mapTaskToModel);
 };
 
+const getTaskTabByName = async (name, ownerId) => {
+    const sql = 'SELECT name FROM task_tabs WHERE name = ? AND owner = ?';
+    const values = [name, ownerId];
+
+    const [rows] = await db.execute(sql, values);
+    return rows.length > 0 ? rows[0] : null;
+};
+
 module.exports = {
     getTaskTabById,
     getTaskTabByIdMainTask,
@@ -114,4 +122,5 @@ module.exports = {
     getAllTaskTabs,
     getDeletePermissionTaskTabs,
     getStarredTaskTab,
+    getTaskTabByName,
 };

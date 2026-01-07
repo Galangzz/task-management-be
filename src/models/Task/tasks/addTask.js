@@ -1,5 +1,5 @@
 const db = require('../../../config/database');
-const { toMySQLDateTime } = require('../../../utils');
+const { toMySQLDateTime, mapTaskToModel } = require('../../../utils');
 
 const addTaskModel = async (id, { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId }) => {
     const sql = `INSERT INTO tasks(
@@ -19,7 +19,7 @@ const addTaskModel = async (id, { title, detail, deadline, hasDate, hasTime, sta
 
     const [rows] = await db.execute(`SELECT * FROM tasks WHERE id = ?`, [id]);
 
-    return rows[0];
+    return rows.map(mapTaskToModel)[0];
 };
 
 module.exports = { addTaskModel };
