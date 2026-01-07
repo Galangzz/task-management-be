@@ -1,8 +1,9 @@
 const AuthenticationError = require('../exceptions/AuthenticationError');
-const UserModel = require('../model/User');
+const UserModel = require('../models/User');
 const TokenManager = require('../utils/tokenize/TokenManager');
+const asyncHandler = require('./asyncHandler');
 
-module.exports = async (req, res, next) => {
+module.exports = asyncHandler(async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         throw new AuthenticationError('Unauthenticated');
@@ -10,12 +11,8 @@ module.exports = async (req, res, next) => {
 
     const token = authHeader.split(' ')[1];
 
-    try {
-        const payload = TokenManager.verifyAccessToken(token);
-        await UserModel.verifyUser(payload.id);
-        req.user = payload;
-        next();
-    } catch (error) {
-        next(error);
-    }
-};
+    const payload = TokenManager.verifyAccessToken(token);
+    await UserModel.verifyUser(payload.id);
+    req.user = payload;
+    next();
+});

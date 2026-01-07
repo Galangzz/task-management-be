@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const getAllTasksSchema = Joi.object({
-    id: Joi.string().trim().required(),
+    tabId: Joi.string().trim().required(),
 });
 
 const postTaskSchema = Joi.object({

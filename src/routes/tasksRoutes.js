@@ -1,7 +1,7 @@
 const express = require('express');
-const TaskController = require('../controllers/tasksController');
 const methodNotAllowed = require('../middlewares/methdoNotAllowedHandler');
 const { validate } = require('../middlewares/validate');
+const asyncHandler = require('../middlewares/asyncHandler');
 const {
     getAllTasksSchema,
     postTaskSchema,
@@ -11,6 +11,7 @@ const {
     putTaskBodySchema,
     putTaskParamsSchema,
 } = require('../validator/tasksSchema');
+const TaskController = require('../controllers/tasksController');
 
 const router = express.Router();
 
@@ -18,19 +19,23 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(validate(getAllTasksSchema, 'body'), TaskController.getTaskController)
-    .post(validate(postTaskSchema, 'body'), TaskController.postTaskController)
+    .get(validate(getAllTasksSchema, 'query'), asyncHandler(TaskController.getTasksController))
+    .post(validate(postTaskSchema, 'body'), asyncHandler(TaskController.postTaskController))
     .all(methodNotAllowed(['GET', 'POST']));
 
 router
     .route('/:id')
-    .get(validate(getTaskById, 'params'), TaskController.getTaskByIdController)
+    .get(validate(getTaskById, 'params'), asyncHandler(TaskController.getTaskByIdController))
     .patch(
         validate(patchTaskParamsSchema, 'params'),
         validate(patchTaskBodySchema, 'body'),
-        TaskController.patchTaskController
+        asyncHandler(TaskController.patchTaskController)
     )
-    .put(validate(putTaskParamsSchema, 'params'), validate(putTaskBodySchema, 'body'), TaskController.putTaskController)
+    .put(
+        validate(putTaskParamsSchema, 'params'),
+        validate(putTaskBodySchema, 'body'),
+        asyncHandler(TaskController.putTaskController)
+    )
     .all(methodNotAllowed(['GET', 'PATCH', 'PUT']));
 
 module.exports = router;

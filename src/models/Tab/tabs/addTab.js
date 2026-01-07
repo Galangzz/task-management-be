@@ -12,9 +12,9 @@ const addMainTask = async (id, owner) => {
     }
 };
 
-const addTaskTab = async (id, name, ownerId) => {
-    const sql = 'INSERT INTO task_tabs(id, name, owner) VALUES(?, ?, ?)';
-    const values = [id, name, ownerId];
+const addTaskTab = async (id, name, createdAt, ownerId) => {
+    const sql = 'INSERT INTO task_tabs(id, name, created_at, owner) VALUES(?, ?, ?, ?)';
+    const values = [id, name, createdAt, ownerId];
 
     const [rows] = await db.execute(sql, values);
     return rows.affectedRows > 0;

@@ -1,64 +1,61 @@
 const { nanoid } = require('nanoid');
 const InvariantError = require('../exceptions/InvariantError');
-const TaskModel = require('../model/Task');
-const TabModel = require('../model/Tab');
+const TaskModel = require('../models/Task');
+const TabModel = require('../models/Tab');
 
-async function getTaskController(req, res, next) {
-    const { id } = req.body;
+async function getTasksController(req, res) {
+    const { tabId } = req.query;
     const { id: credentialId } = req.user;
-    console.log(id);
-    try {
-        await TaskModel.verifyTaskOwner(id, credentialId);
-        const data = await TaskModel.getTasksByIdTab(id);
-
-        if (!data) {
-            throw new InvariantError('Tugas tidak ditemukan');
-        }
-
-        res.status(200).json({
-            status: 'success',
-            message: 'Berhasil mendapatkan tugas',
-            data,
-        });
-    } catch (error) {
-        next(error);
+    let data;
+    if (tabId === 'starred-task') {
+        data = await TaskModel.get(credentialId);
+    } else {
+        // await TaskModel.verifyTaskOwner(tabId, credentialId);
+        await TabModel.verifyTabOwner(tabId, credentialId);
+        data = await TaskModel.getTasksByIdTab(tabId);
     }
+
+    // if (!data) {
+    //     throw new InvariantError('Tugas tidak ditemukan');
+    // }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Berhasil mendapatkan tugas',
+        data: data ? (Array.isArray(data) ? data : [data]) : [],
+    });
 }
 
-async function postTaskController(req, res, next) {
+async function postTaskController(req, res) {
     const { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId } = req.body;
     const { id: credentialId } = req.user;
-    try {
-        const id = `task-${nanoid(16)}`;
-        //verify tab owner
-        await TabModel.verifyTabOwner(taskTabId, credentialId);
+    const id = `task-${nanoid(16)}`;
+    //verify tab owner
+    await TabModel.verifyTabOwner(taskTabId, credentialId);
 
-        const result = await TaskModel.addTaskModel(id, {
-            title,
-            detail,
-            deadline,
-            hasDate,
-            hasTime,
-            starred,
-            isCompleted,
-            taskTabId,
-        });
+    const result = await TaskModel.addTaskModel(id, {
+        title,
+        detail,
+        deadline,
+        hasDate,
+        hasTime,
+        starred,
+        isCompleted,
+        taskTabId,
+    });
 
-        if (!result) {
-            throw new InvariantError('Gagal menambahkan tugas');
-        }
-
-        res.status(201).json({
-            status: 'success',
-            message: 'Tugas berhasil ditambahkan',
-            data: result,
-        });
-    } catch (error) {
-        next(error);
+    if (!result) {
+        throw new InvariantError('Gagal menambahkan tugas');
     }
+
+    res.status(201).json({
+        status: 'success',
+        message: 'Tugas berhasil ditambahkan',
+        data: result,
+    });
 }
 
-async function patchTaskController(req, res, next) {
+async function patchTaskController(req, res) {
     const { id } = req.params;
     const { starred, isCompleted } = req.body;
     const { id: credentialId } = req.user;
@@ -80,80 +77,68 @@ async function patchTaskController(req, res, next) {
         throw new InvariantError('Tidak ada field yang diperbarui');
     }
 
-    try {
-        await TaskModel.verifyTaskOwner(id, credentialId);
+    await TaskModel.verifyTaskOwner(id, credentialId);
 
-        const result = await TaskModel.updateTaskModel(id, field, values);
+    const result = await TaskModel.updateTaskModel(id, field, values);
 
-        if (!result) {
-            throw new InvariantError('Gagal memperbarui catatan');
-        }
-
-        res.status(200).json({
-            status: 'success',
-            message: 'Tugas berhasil diperbaharui',
-            data: {
-                id: result,
-            },
-        });
-    } catch (error) {
-        next(error);
+    if (!result) {
+        throw new InvariantError('Gagal memperbarui catatan');
     }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Tugas berhasil diperbaharui',
+        data: {
+            id: result,
+        },
+    });
 }
 
-async function getTaskByIdController(req, res, next) {
+async function getTaskByIdController(req, res) {
     const { id } = req.params;
 
-    try {
-        const result = await TaskModel.getTaskById(id);
+    const result = await TaskModel.getTaskById(id);
 
-        res.status(200).json({
-            status: 'success',
-            data: result,
-        });
-    } catch (error) {
-        next(error);
-    }
+    res.status(200).json({
+        status: 'success',
+        data: result,
+    });
 }
 
-async function putTaskController(req, res, next) {
+async function putTaskController(req, res) {
     const { id: ownerId } = req.user;
     const { id } = req.params;
     const { title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId } = req.body;
-    try {
-        await TaskModel.verifyTaskOwner(id, ownerId);
-        const field = [
-            'title = ?',
-            'detail = ?',
-            'deadline = ?',
-            'has_date = ?',
-            'has_time = ?',
-            'starred = ?',
-            'is_completed = ?',
-            'task_tabs_id = ?',
-        ];
-        const values = [title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId];
+    await TaskModel.verifyTaskOwner(id, ownerId);
+    const field = [
+        'title = ?',
+        'detail = ?',
+        'deadline = ?',
+        'has_date = ?',
+        'has_time = ?',
+        'starred = ?',
+        'is_completed = ?',
+        'task_tabs_id = ?',
+    ];
+    const values = [title, detail, deadline, hasDate, hasTime, starred, isCompleted, taskTabId];
 
-        const result = await TaskModel.updateTaskModel(id, field, values);
+    const result = await TaskModel.updateTaskModel(id, field, values);
 
-        if (!result) {
-            throw new InvariantError('Gagal memperbarui tugas');
-        }
-
-        res.status(200).json({
-            status: 'success',
-            message: 'Tugas berhasil diperbaharui',
-            data: {
-                id: result,
-            },
-        });
-    } catch (error) {
-        next(error);
+    if (!result) {
+        throw new InvariantError('Gagal memperbarui tugas');
     }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Tugas berhasil diperbaharui',
+        data: {
+            id: result,
+        },
+    });
 }
 
 module.exports = {
-    getTaskController,
+    getTasksController,
     postTaskController,
     patchTaskController,
     getTaskByIdController,

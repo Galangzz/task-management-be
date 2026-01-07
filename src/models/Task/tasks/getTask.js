@@ -7,7 +7,7 @@ const getTasksByIdTab = async (id) => {
     const values = [id];
 
     const [rows] = await db.execute(sql, values);
-    return rows.length > 0 ? rows[0] : null;
+    return rows.length > 0 ? rows.map(mapTaskToModel) : null;
 };
 
 const getTaskById = async (id) => {

@@ -1,5 +1,5 @@
-const redis = require('../service/redis/CacheService');
-const mailSender = require('../service/mail');
+const redis = require('../services/redis/CacheService');
+const mailSender = require('../services/mail');
 
 const InvariantError = require('../exceptions/InvariantError');
 
