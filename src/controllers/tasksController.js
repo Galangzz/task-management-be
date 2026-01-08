@@ -8,16 +8,11 @@ async function getTasksController(req, res) {
     const { id: credentialId } = req.user;
     let data;
     if (tabId === 'starred-task') {
-        data = await TaskModel.get(credentialId);
+        data = await TaskModel.getTaskStarred(credentialId);
     } else {
-        // await TaskModel.verifyTaskOwner(tabId, credentialId);
         await TabModel.verifyTabOwner(tabId, credentialId);
         data = await TaskModel.getTasksByIdTab(tabId);
     }
-
-    // if (!data) {
-    //     throw new InvariantError('Tugas tidak ditemukan');
-    // }
 
     res.status(200).json({
         status: 'success',
@@ -137,10 +132,29 @@ async function putTaskController(req, res) {
     });
 }
 
+async function deleteTaskByIdController(req, res) {
+    const { id: ownerId } = req.user;
+    const { id } = req.params;
+
+    await TaskModel.verifyTaskOwner(id, ownerId);
+
+    const result = await TaskModel.deleteTaskById(id);
+
+    if (!result) {
+        throw new InvariantError('Gagal menghapus tugas');
+    }
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Tugas berhasil dihapus',
+    });
+}
+
 module.exports = {
     getTasksController,
     postTaskController,
     patchTaskController,
     getTaskByIdController,
     putTaskController,
+    deleteTaskByIdController
 };

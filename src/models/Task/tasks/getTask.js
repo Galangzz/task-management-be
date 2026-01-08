@@ -22,7 +22,17 @@ const getTaskById = async (id) => {
     return rows.map(mapTaskToModel)[0];
 };
 
+const getTaskStarred = async (id) => {
+    const sql = `SELECT tk.* FROM tasks tk 
+            JOIN task_tabs tb ON tb.id = tk.task_tabs_id 
+            WHERE tb.owner = ? AND tk.starred = 1 AND tk.is_completed = 0`;
+    const values = [id];
+    const [rows] = await db.execute(sql, values);
+    return rows.length > 0 ? rows.map(mapTaskToModel) : null;
+};
+
 module.exports = {
     getTasksByIdTab,
     getTaskById,
+    getTaskStarred,
 };
