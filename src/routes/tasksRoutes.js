@@ -36,6 +36,7 @@ router
         validate(putTaskBodySchema, 'body'),
         asyncHandler(TaskController.putTaskController)
     )
-    .all(methodNotAllowed(['GET', 'PATCH', 'PUT']));
+    .delete(validate(getTaskById, 'params'), asyncHandler(TaskController.deleteTaskByIdController))
+    .all(methodNotAllowed(['GET', 'PATCH', 'PUT', 'DELETE']));
 
 module.exports = router;
