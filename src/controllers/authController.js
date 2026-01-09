@@ -27,20 +27,29 @@ async function postAuthController(req, res) {
         });
 }
 
-async function getNewAccessToken(req, res) {
-    const { jwt: refreshToken } = req.cookies;
-    await AuthModel.verifyRefreshToken(refreshToken);
-    const { id } = token.verifyRefreshToken(refreshToken);
+async function getNewAccessToken(req, res, next) {
+    try {
+        const { jwt: refreshToken } = req.cookies;
+        await AuthModel.verifyRefreshToken(refreshToken);
+        const { id } = token.verifyRefreshToken(refreshToken);
 
-    const accessToken = token.generateAccessToken({ id });
+        const accessToken = token.generateAccessToken({ id });
 
-    res.status(200).json({
-        status: 'success',
-        message: 'Access token berhasil diperbaharui ',
-        data: {
-            accessToken,
-        },
-    });
+        res.status(200).json({
+            status: 'success',
+            message: 'Access token berhasil diperbaharui ',
+            data: {
+                accessToken,
+            },
+        });
+    } catch (error) {
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+        });
+        next(error);
+    }
 }
 
 async function deleteAuthController(req, res) {
@@ -54,10 +63,20 @@ async function deleteAuthController(req, res) {
 
 async function getMe(req, res) {
     const { id } = req.user;
-    res.status(200).json({
-        data: {
+
+    const result = await UserModel.getUserData(id);
+    let userData;
+    if (result) {
+        userData = {
             id: id,
-        },
+            username: result.username,
+            email: result.email,
+        };
+    } else {
+        userData = null;
+    }
+    res.status(200).json({
+        data: userData,
     });
 }
 
