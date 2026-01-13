@@ -11,19 +11,19 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(asyncHandler(TaskTabsController.getAllTaskTabs))
-    .post(validate(postTaskTabsSchema, 'body'), asyncHandler(TaskTabsController.postTaskTabsHandler))
+    .get(asyncHandler(TaskTabsController.getTabs))
+    .post(validate(postTaskTabsSchema, 'body'), asyncHandler(TaskTabsController.postTab))
     .all(methodNotAllowed(['GET', 'POST']));
 
 router
     .route('/:id')
-    .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTaskTabWithTasks))
-    .delete(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.deleteTaskTab))
+    .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTaskTabWithTasks)) // TODO Unused GET
+    .delete(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.deleteTabById))
     .all(methodNotAllowed(['GET', 'DELETE']));
 
 router
     .route('/tab/:id')
-    .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTaskTabById))
+    .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTabById))
     .all(methodNotAllowed(['GET']));
 
 module.exports = router;
