@@ -4,9 +4,8 @@
 // const NotFoundError = require('../../exceptions/NotFoundError');
 // const { mapTaskTabsToModel, mapTaskToModel, mapTabToModel } = require('../../utils/index');
 
-
 //     addMainTask: async (id, owner) => {
-//         const sql = `INSERT INTO task_tabs(id, name, delete_permission, owner) 
+//         const sql = `INSERT INTO task_tabs(id, name, delete_permission, owner)
 //                     VALUES(?, ?, ?, ?)`;
 //         const values = [id, 'Tugas Saya', false, owner];
 
@@ -29,13 +28,13 @@
 //         const [rows] = await db.execute(sql, values);
 //         return rows.length > 0 ? rows[0] : null;
 //     },
-//     getTaskTabById: async (id) => {
+//     getTabById: async (id) => {
 //         const sql = 'SELECT * FROM task_tabs WHERE id = ?';
 //         const values = [id];
 //         const [rows] = await db.execute(sql, values);
 //         return rows.length > 0 ? rows[0] : null;
 //     },
-//     getTaskTabByIdMainTask: async (id, owner) => {
+//     getTabByIdMainTask: async (id, owner) => {
 //         const sql = `SELECT * FROM task_tabs WHERE delete_permission = 0 AND owner = ?`;
 //         const values = [owner];
 
@@ -44,7 +43,7 @@
 //     },
 //     getTaskTabWithTasks: async (id) => {
 //         const sql = `
-//             SELECT 
+//             SELECT
 //                 tb.id,
 //                 tb.name,
 //                 tb.created_at,
@@ -58,7 +57,7 @@
 //                 t.has_time,
 //                 t.starred,
 //                 t.is_completed,
-//                 t.task_tabs_id  
+//                 t.task_tabs_id
 //             FROM task_tabs tb
 //             LEFT JOIN tasks t ON tb.id = t.task_tabs_id
 //             WHERE tb.id = ?
@@ -104,7 +103,7 @@
 //         const result = mapTaskTabsToModel(rows);
 //         return result;
 //     },
-//     getAllTaskTabs: async (ownerId) => {
+//     getTabs: async (ownerId) => {
 //         const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs WHERE owner = ? ORDER BY created_at';
 //         const values = [ownerId];
 //         const [rows] = await db.execute(sql, values);
@@ -118,7 +117,7 @@
 
 //         return rows.length > 0 ? rows[0].permission : null;
 //     },
-//     deleteTaskTab: async (id) => {
+//     deleteTabById: async (id) => {
 //         const sql = 'DELETE FROM task_tabs WHERE id = ?';
 //         const values = [id];
 
@@ -127,8 +126,8 @@
 //         return rows.affectedRows > 0;
 //     },
 //     getStarredTaskTab: async (id) => {
-//         const sql = `SELECT tk.* FROM tasks tk 
-//             JOIN task_tabs tb ON tb.id = tk.task_tabs_id 
+//         const sql = `SELECT tk.* FROM tasks tk
+//             JOIN task_tabs tb ON tb.id = tk.task_tabs_id
 //             WHERE tb.owner = ? AND tk.starred = 1 AND tk.is_completed = 0`;
 //         const values = [id];
 //         const [rows] = await db.execute(sql, values);
@@ -136,8 +135,8 @@
 //         return rows.map(mapTaskToModel);
 //     },
 //     verifyTabOwner: async (id, owner) => {
-//         const sql = `SELECT tb.owner 
-//             FROM task_tabs tb 
+//         const sql = `SELECT tb.owner
+//             FROM task_tabs tb
 //             JOIN users u ON tb.owner = u.id
 //             WHERE tb.id = ?`;
 //         const values = [id];
@@ -152,4 +151,3 @@
 //             throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
 //         }
 //     },
-

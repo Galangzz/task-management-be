@@ -2,14 +2,14 @@ const db = require('../../../config/database');
 const NotFoundError = require('../../../exceptions/NotFoundError');
 const { mapTabToModel, mapTaskTabsToModel, mapTaskToModel } = require('../../../utils');
 
-const getTaskTabById = async (id) => {
+const getTabById = async (id) => {
     const sql = 'SELECT * FROM task_tabs WHERE id = ?';
     const values = [id];
     const [rows] = await db.execute(sql, values);
     return rows.length > 0 ? rows[0] : null;
 };
 
-const getTaskTabByIdMainTask = async (id, owner) => {
+const getTabByIdMainTask = async (id, owner) => {
     const sql = `SELECT * FROM task_tabs WHERE delete_permission = 0 AND owner = ?`;
     const values = [owner];
 
@@ -80,7 +80,7 @@ const getMainTaskTab = async (ownerId) => {
     return result;
 };
 
-const getAllTaskTabs = async (ownerId) => {
+const getTabs = async (ownerId) => {
     const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs WHERE owner = ? ORDER BY created_at';
     const values = [ownerId];
     const [rows] = await db.execute(sql, values);
@@ -115,11 +115,11 @@ const getTaskTabByName = async (name, ownerId) => {
 };
 
 module.exports = {
-    getTaskTabById,
-    getTaskTabByIdMainTask,
+    getTabById,
+    getTabByIdMainTask,
     getTaskTabWithTasks,
     getMainTaskTab,
-    getAllTaskTabs,
+    getTabs,
     getDeletePermissionTaskTabs,
     getStarredTaskTab,
     getTaskTabByName,

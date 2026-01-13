@@ -4,7 +4,7 @@ const TaskTabsModel = require('../models/Tab');
 const { nanoid } = require('nanoid');
 const { toMySQLDateTime } = require('../utils');
 
-async function postTaskTabsHandler(req, res) {
+async function postTab(req, res) {
     const { name } = req.body;
     const { id: ownerId } = req.user;
 
@@ -29,17 +29,17 @@ async function postTaskTabsHandler(req, res) {
         data: { id, name, createdAt, deletePermission: true },
     });
 }
-async function getTaskTabById(req, res) {
+async function getTabById(req, res) {
     const { id } = req.params;
     const { id: ownerId } = req.user;
 
     let data;
 
     if (id === 'main-task') {
-        data = await TaskTabsModel.getTaskTabByIdMainTask(id, ownerId);
+        data = await TaskTabsModel.getTabByIdMainTask(id, ownerId);
     } else {
         await TaskTabsModel.verifyTabOwner(id, ownerId);
-        data = await TaskTabsModel.getTaskTabById(id);
+        data = await TaskTabsModel.getTabById(id);
     }
 
     if (!data) {
@@ -78,16 +78,16 @@ async function getTaskTabWithTasks(req, res) {
     });
 }
 
-async function getAllTaskTabs(req, res) {
+async function getTabs(req, res) {
     const { id: ownerId } = req.user;
-    const data = await TaskTabsModel.getAllTaskTabs(ownerId);
+    const data = await TaskTabsModel.getTabs(ownerId);
     res.status(200).json({
         status: 'success',
         data,
     });
 }
 
-async function deleteTaskTab(req, res) {
+async function deleteTabById(req, res) {
     const { id } = req.params;
     const { id: ownerId } = req.user;
     await TaskTabsModel.verifyTabOwner(id, ownerId);
@@ -100,7 +100,11 @@ async function deleteTaskTab(req, res) {
         });
     }
 
-    await TaskTabsModel.deleteTaskTab(id);
+    const status = await TaskTabsModel.deleteTabById(id);
+
+    if (!status) {
+        throw new InvariantError('Gagal menghapus task tab');
+    }
 
     res.status(200).json({
         status: 'success',
@@ -108,4 +112,4 @@ async function deleteTaskTab(req, res) {
     });
 }
 
-module.exports = { postTaskTabsHandler, getTaskTabWithTasks, getAllTaskTabs, deleteTaskTab, getTaskTabById };
+module.exports = { postTab, getTaskTabWithTasks, getTabs, deleteTabById, getTabById };
