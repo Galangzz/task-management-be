@@ -1,5 +1,9 @@
 require('dotenv').config();
+require('./services/cron/cronDeadline');
 const express = require('express');
+const { createServer } = require('http');
+const { setupSocket } = require('./socket');
+
 const morgan = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -15,6 +19,8 @@ const UserRoutes = require('./routes/usersRoutes');
 const AuthRoutes = require('./routes/authRoutes');
 
 const app = express();
+const server = createServer(app);
+const io = setupSocket(server);
 
 const port = process.env.PORT || 3001;
 const host = process.env.HOST;
@@ -30,16 +36,23 @@ const limiter = rateLimit({
 
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin: process.env.CORS_ORIGIN,
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    })
+    }),
 );
 // app.use(limiter);
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
+
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: 'success',
+        message: 'Healthy',
+    });
+});
 
 app.use('/api/users', UserRoutes);
 app.use('/api/auth', AuthRoutes);
@@ -53,6 +66,8 @@ app.use(notFoundHandler);
 
 app.use(errorHandler);
 
-app.listen(port, host, () => {
+server.listen(port, host, () => {
     console.log(`Server running at http://${host}:${port}`);
 });
+
+module.exports = { io };
