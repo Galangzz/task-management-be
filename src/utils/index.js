@@ -32,6 +32,12 @@ const mapTaskToModel = (row) => ({
     taskTabId: row.task_tabs_id,
 });
 
+const mapDeadlineToModel = (row) => ({
+    title: row.title,
+    deadline: row.deadline,
+    userId: row.owner,
+});
+
 const toMySQLDateTime = (date) => {
     if (!date) return null;
 
@@ -61,4 +67,4 @@ const mapTabToModel = (rows) => ({
     deletePermission: Boolean(rows.delete_permission),
 });
 
-module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel, mapTabToModel };
+module.exports = { mapTaskTabsToModel, toMySQLDateTime, mapTaskToModel, mapTabToModel, mapDeadlineToModel };

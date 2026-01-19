@@ -1,6 +1,6 @@
 const db = require('../../../config/database');
 const NotFoundError = require('../../../exceptions/NotFoundError');
-const { mapTaskToModel } = require('../../../utils');
+const { mapTaskToModel, mapDeadlineToModel } = require('../../../utils');
 
 const getTasksByIdTab = async (id) => {
     const sql = `SELECT * FROM tasks WHERE task_tabs_id = ?`;
@@ -31,8 +31,21 @@ const getTaskStarred = async (id) => {
     return rows.length > 0 ? rows.map(mapTaskToModel) : null;
 };
 
+const getTaskDeadlined = async () => {
+    //TODO: FIX THIS: Add New Column to flag sent reminder
+    const sql = `
+        SELECT tk.title, tk.deadline, tb.owner FROM tasks tk
+        JOIN task_tabs tb ON tk.task_tabs_id = tb.id
+        WHERE tk.deadline BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 5 MINUTE)
+    `
+    const [rows] = await db.execute(sql);
+    return rows.length > 0 ? rows.map(mapDeadlineToModel) : null;
+    
+}
+
 module.exports = {
     getTasksByIdTab,
     getTaskById,
     getTaskStarred,
+    getTaskDeadlined
 };
