@@ -3,6 +3,7 @@ require('./services/cron/cronDeadline');
 const express = require('express');
 const { createServer } = require('http');
 const { setupSocket } = require('./socket');
+const { startDeadlineCron } = require('./services/cron/cronDeadline');
 
 const morgan = require('morgan');
 const cors = require('cors');
@@ -21,6 +22,7 @@ const AuthRoutes = require('./routes/authRoutes');
 const app = express();
 const server = createServer(app);
 const io = setupSocket(server);
+startDeadlineCron(io);
 
 const port = process.env.PORT || 3001;
 const host = process.env.HOST;
@@ -69,5 +71,3 @@ app.use(errorHandler);
 server.listen(port, host, () => {
     console.log(`Server running at http://${host}:${port}`);
 });
-
-module.exports = { io };
