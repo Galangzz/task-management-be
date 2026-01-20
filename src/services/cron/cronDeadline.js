@@ -1,26 +1,34 @@
 const { CronJob } = require('cron');
-const { io } = require('../../server');
 const { getTaskDeadlined } = require('../../models/Task');
 
-const job = new CronJob(
-    '* * * * *',
-    async () => {
-        try {
-            console.log('[CRON] checking deadlines');
-            const tasks = await getTaskDeadlined();
-            console.log({ tasksLength:  tasks ? tasks.length : 0 });
-            if (tasks) {
+function startDeadlineCron(io) {
+    return new CronJob(
+        '* * * * *',
+        async () => {
+            try {
+                console.log('[CRON] checking deadlines');
+                const tasks = await getTaskDeadlined();
+
+                if (!tasks) return;
+                console.log({ TaskLength: tasks ? tasks.length : 0 });
+
+                console.log({ tasks });
                 for (const task of tasks) {
                     console.log({ task });
+                    console.log({ room: io.of('/').adapter.rooms.has(`user-${task.userId}`) });
+                    io.to(`user-${task.userId}`).emit('deadline-reminder', {
+                        title: task.title,
+                        deadline: task.deadline,
+                    });
                 }
+            } catch (error) {
+                console.error('[CRON ERROR]', error);
             }
-        } catch (error) {
-            console.log({ error });
-        }
-    },
-    null,
-    true,
-    'Asia/Jakarta',
-);
+        },
+        null,
+        true,
+        'Asia/Jakarta',
+    );
+}
 
-module.exports = job;
+module.exports = { startDeadlineCron };

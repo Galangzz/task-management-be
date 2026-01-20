@@ -12,7 +12,7 @@ function setupSocket(server) {
 
         socket.on('join-user', (userId) => {
             socket.join(`user-${userId}`);
-            console.log(`user ${userId} joined`);
+            console.log(`-USER- ${userId} joined`);
         });
 
         socket.on('disconnect', () => {
