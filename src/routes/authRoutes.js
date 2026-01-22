@@ -14,7 +14,6 @@ const loginLimiter = rateLimit({
     message: 'Terlalu banyak percobaan login, silakan coba lagi nanti.',
     standardHeaders: true,
     legacyHeaders: false,
-    // skip: (req) => req.method === 'OPTIONS',
 });
 
 const router = express.Router();

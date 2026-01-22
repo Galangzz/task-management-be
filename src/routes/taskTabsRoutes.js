@@ -17,7 +17,7 @@ router
 
 router
     .route('/:id')
-    .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTaskTabWithTasks)) // TODO Unused GET
+    // .get(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.getTaskTabWithTasks)) // TODO Unused GET
     .delete(validate(idTaskSchema, 'params'), asyncHandler(TaskTabsController.deleteTabById))
     .all(methodNotAllowed(['GET', 'DELETE']));
 

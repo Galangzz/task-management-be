@@ -18,6 +18,7 @@ const TaskTabRoutes = require('./routes/taskTabsRoutes');
 const TaskRoutes = require('./routes/tasksRoutes');
 const UserRoutes = require('./routes/usersRoutes');
 const AuthRoutes = require('./routes/authRoutes');
+const NotificationsRoutes = require('./routes/notificationsRoutes');
 
 const app = express();
 const server = createServer(app);
@@ -28,12 +29,12 @@ const port = process.env.PORT || 3001;
 const host = process.env.HOST;
 
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 5 * 60 * 1000,
     limit: 100,
     message: 'Terlalu banyak permintaan, silakan coba lagi nanti.',
     standardHeaders: true,
     legacyHeaders: false,
-    // skip: (req) => req.method === 'OPTIONS',
+    skip: (req) => req.method === 'OPTIONS',
 });
 
 app.use(
@@ -44,7 +45,7 @@ app.use(
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     }),
 );
-// app.use(limiter);
+app.use(limiter);
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
@@ -61,6 +62,7 @@ app.use('/api/auth', AuthRoutes);
 
 app.use(authHandler);
 
+app.use('/api/notifications', NotificationsRoutes);
 app.use('/api/task-tabs', TaskTabRoutes);
 app.use('/api/tasks', TaskRoutes);
 
