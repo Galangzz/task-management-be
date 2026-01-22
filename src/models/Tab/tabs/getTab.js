@@ -17,68 +17,68 @@ const getTabByIdMainTask = async (id, owner) => {
     return rows.length > 0 ? rows[0] : null;
 };
 
-const getTaskTabWithTasks = async (id) => {
-    const sql = `
-            SELECT 
-                tb.id,
-                tb.name,
-                tb.created_at,
-                tb.delete_permission,
-                t.id as task_id,
-                t.title as task_title,
-                t.detail as task_detail,
-                t.created_at as task_created_at,
-                t.deadline as task_deadline,
-                t.has_date,
-                t.has_time,
-                t.starred,
-                t.is_completed,
-                t.task_tabs_id  
-            FROM task_tabs tb
-            LEFT JOIN tasks t ON tb.id = t.task_tabs_id
-            WHERE tb.id = ?
-        `;
-    const values = [id];
-    const [rows] = await db.execute(sql, values);
+// const getTaskTabWithTasks = async (id) => {
+//     const sql = `
+//             SELECT 
+//                 tb.id,
+//                 tb.name,
+//                 tb.created_at,
+//                 tb.delete_permission,
+//                 t.id as task_id,
+//                 t.title as task_title,
+//                 t.detail as task_detail,
+//                 t.created_at as task_created_at,
+//                 t.deadline as task_deadline,
+//                 t.has_date,
+//                 t.has_time,
+//                 t.starred,
+//                 t.is_completed,
+//                 t.task_tabs_id  
+//             FROM task_tabs tb
+//             LEFT JOIN tasks t ON tb.id = t.task_tabs_id
+//             WHERE tb.id = ?
+//         `;
+//     const values = [id];
+//     const [rows] = await db.execute(sql, values);
 
-    if (rows.length === 0) {
-        return null;
-    }
+//     if (rows.length === 0) {
+//         return null;
+//     }
 
-    const result = mapTaskTabsToModel(rows);
-    return result;
-};
-const getMainTaskTab = async (ownerId) => {
-    const sql = `
-            SELECT
-                tb.id,
-                tb.name,
-                tb.created_at,
-                tb.delete_permission,
-                t.id as task_id,
-                t.title as task_title,
-                t.detail as task_detail,
-                t.created_at as task_created_at,
-                t.deadline as task_deadline,
-                t.has_date,
-                t.has_time,
-                t.starred,
-                t.is_completed,
-                t.task_tabs_id
-            FROM task_tabs tb
-            LEFT JOIN tasks t ON tb.id = t.task_tabs_id
-            WHERE tb.owner = ? AND delete_permission = 0
-        `;
-    const values = [ownerId];
+//     const result = mapTaskTabsToModel(rows);
+//     return result;
+// };
+// const getMainTaskTab = async (ownerId) => {
+//     const sql = `
+//             SELECT
+//                 tb.id,
+//                 tb.name,
+//                 tb.created_at,
+//                 tb.delete_permission,
+//                 t.id as task_id,
+//                 t.title as task_title,
+//                 t.detail as task_detail,
+//                 t.created_at as task_created_at,
+//                 t.deadline as task_deadline,
+//                 t.has_date,
+//                 t.has_time,
+//                 t.starred,
+//                 t.is_completed,
+//                 t.task_tabs_id
+//             FROM task_tabs tb
+//             LEFT JOIN tasks t ON tb.id = t.task_tabs_id
+//             WHERE tb.owner = ? AND delete_permission = 0
+//         `;
+//     const values = [ownerId];
 
-    const [rows] = await db.execute(sql, values);
-    if (!rows.length) {
-        throw new NotFoundError('Tab tidak ditemukan');
-    }
+//     const [rows] = await db.execute(sql, values);
+//     if (!rows.length) {
+//         throw new NotFoundError('Tab tidak ditemukan');
+//     }
 
-    const result = mapTaskTabsToModel(rows);
-    return result;
-};
+//     const result = mapTaskTabsToModel(rows);
+//     return result;
+// };
 
 const getTabs = async (ownerId) => {
     const sql = 'SELECT id, name, created_at, delete_permission FROM task_tabs WHERE owner = ? ORDER BY created_at';
@@ -117,8 +117,8 @@ const getTaskTabByName = async (name, ownerId) => {
 module.exports = {
     getTabById,
     getTabByIdMainTask,
-    getTaskTabWithTasks,
-    getMainTaskTab,
+    // getTaskTabWithTasks,
+    // getMainTaskTab,
     getTabs,
     getDeletePermissionTaskTabs,
     getStarredTaskTab,

@@ -32,18 +32,6 @@ const getTaskStarred = async (id) => {
 };
 
 const getTaskDeadlined = async () => {
-    //TODO: FIX THIS: Add New Column to flag sent reminder
-    // const sql = `
-    //     SELECT tk.title, tk.deadline, tb.owner FROM tasks tk
-    //     JOIN task_tabs tb ON tk.task_tabs_id = tb.id
-    //     WHERE is_completed = 0 
-    //         AND tk.deadline BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 5 MINUTE)
-    //         AND NOT EXISTS (
-    //             SELECT 1 
-    //             FROM notifications tn 
-    //             WHERE tn.task_id = tk.id
-    //             )
-    // `;
     const sql = `
         SELECT tk.title, tk.deadline, tb.owner FROM tasks tk
         JOIN task_tabs tb ON tk.task_tabs_id = tb.id

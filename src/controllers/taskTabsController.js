@@ -53,30 +53,30 @@ async function getTabById(req, res) {
     });
 }
 
-async function getTaskTabWithTasks(req, res) {
-    const { id } = req.params;
-    const { id: ownerId } = req.user;
+// async function getTaskTabWithTasks(req, res) {
+//     const { id } = req.params;
+//     const { id: ownerId } = req.user;
 
-    let data;
-    if (id === 'starred-task') {
-        const result = await TaskTabsModel.getStarredTaskTab(ownerId);
-        data = {
-            id: 'starred-task',
-            name: 'Starred Task',
-            tasks: result.length > 1 ? result : [...result],
-        };
-    } else if (id === 'main-task') {
-        data = await TaskTabsModel.getMainTaskTab(ownerId);
-    } else {
-        await TaskTabsModel.verifyTabOwner(id, ownerId);
-        data = await TaskTabsModel.getTaskTabWithTasks(id);
-    }
+//     let data;
+//     if (id === 'starred-task') {
+//         const result = await TaskTabsModel.getStarredTaskTab(ownerId);
+//         data = {
+//             id: 'starred-task',
+//             name: 'Starred Task',
+//             tasks: result.length > 1 ? result : [...result],
+//         };
+//     } else if (id === 'main-task') {
+//         data = await TaskTabsModel.getMainTaskTab(ownerId);
+//     } else {
+//         await TaskTabsModel.verifyTabOwner(id, ownerId);
+//         data = await TaskTabsModel.getTaskTabWithTasks(id);
+//     }
 
-    res.status(200).json({
-        status: 'success',
-        data,
-    });
-}
+//     res.status(200).json({
+//         status: 'success',
+//         data,
+//     });
+// }
 
 async function getTabs(req, res) {
     const { id: ownerId } = req.user;
@@ -112,4 +112,4 @@ async function deleteTabById(req, res) {
     });
 }
 
-module.exports = { postTab, getTaskTabWithTasks, getTabs, deleteTabById, getTabById };
+module.exports = { postTab, getTabs, deleteTabById, getTabById };
