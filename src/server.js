@@ -18,6 +18,7 @@ const TaskTabRoutes = require('./routes/taskTabsRoutes');
 const TaskRoutes = require('./routes/tasksRoutes');
 const UserRoutes = require('./routes/usersRoutes');
 const AuthRoutes = require('./routes/authRoutes');
+const NotificationsRoutes = require('./routes/notificationsRoutes');
 
 const app = express();
 const server = createServer(app);
@@ -61,6 +62,7 @@ app.use('/api/auth', AuthRoutes);
 
 app.use(authHandler);
 
+app.use('/api/notifications', NotificationsRoutes);
 app.use('/api/task-tabs', TaskTabRoutes);
 app.use('/api/tasks', TaskRoutes);
 

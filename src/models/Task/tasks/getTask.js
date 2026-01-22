@@ -33,8 +33,9 @@ const getTaskStarred = async (id) => {
 
 const getTaskDeadlined = async () => {
     const sql = `
-        SELECT tk.title, tk.deadline, tb.owner FROM tasks tk
+        SELECT tk.title, tk.deadline, tb.owner, n.token FROM tasks tk
         JOIN task_tabs tb ON tk.task_tabs_id = tb.id
+        LEFT JOIN notifications n ON tb.owner = n.user_id
         WHERE is_completed = 0 
             AND tk.deadline = NOW()
     `;

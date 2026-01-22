@@ -36,6 +36,7 @@ const mapDeadlineToModel = (row) => ({
     title: row.title,
     deadline: row.deadline,
     userId: row.owner,
+    token: row.token || null,
 });
 
 const toMySQLDateTime = (date) => {

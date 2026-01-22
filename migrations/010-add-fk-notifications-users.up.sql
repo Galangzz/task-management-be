@@ -1,0 +1,5 @@
+ALTER TABLE notifications
+ADD CONSTRAINT fk_notifications_users
+FOREIGN KEY (user_id) REFERENCES users(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;

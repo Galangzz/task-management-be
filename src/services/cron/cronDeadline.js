@@ -1,5 +1,6 @@
 const { CronJob } = require('cron');
 const { getTaskDeadlined } = require('../../models/Task');
+const { sendPushNotification } = require('../firebase/fcmService');
 
 function startDeadlineCron(io) {
     return new CronJob(
@@ -19,6 +20,12 @@ function startDeadlineCron(io) {
                     io.to(`user-${task.userId}`).emit('deadline-reminder', {
                         title: task.title,
                         deadline: task.deadline,
+                    });
+                    sendPushNotification({
+                        token: task.token,
+                        title: 'Deadline Reminder!!!',
+                        body: `${task.title} Deadline ${new Date(task.deadline).toLocaleDateString('id-ID')}`,
+                        // data: { title: task.title, deadline: String(task.deadline) },
                     });
                 }
             } catch (error) {
