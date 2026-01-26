@@ -13,8 +13,6 @@ const sendPushNotification = async ({ token, title, body }) => {
 
     try {
         const response = await fcm.send(message);
-        console.log('FCM sent :', response);
-        console.log({ fcmResponse: response });
         return response;
     } catch (error) {
         console.log({ fcmError: error });

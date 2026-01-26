@@ -33,7 +33,6 @@ async function sendOTP(email) {
     }
 
     const otp = generateOTP();
-    console.log({ otp });
 
     await redis.set(otpKey, JSON.stringify({ otp, attempt: 0 }), OTP_TTL);
 

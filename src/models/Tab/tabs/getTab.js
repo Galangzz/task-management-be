@@ -102,7 +102,6 @@ const getStarredTaskTab = async (id) => {
             WHERE tb.owner = ? AND tk.starred = 1 AND tk.is_completed = 0`;
     const values = [id];
     const [rows] = await db.execute(sql, values);
-    console.log({ rows: rows[0] });
     return rows.map(mapTaskToModel);
 };
 
