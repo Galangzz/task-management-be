@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const AuthorizationError = require('../../exceptions/AuthorizationError');
 const InvariantError = require('../../exceptions/InvariantError');
 const AuthenticationError = require('../../exceptions/AuthenticationError');
 
