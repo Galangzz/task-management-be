@@ -11,9 +11,9 @@ function startDeadlineCron(io) {
                 const tasks = await getTaskDeadlined();
 
                 if (!tasks) return;
-                console.log({ TaskLength: tasks ? tasks.length : 0 });
+                // console.log({ TaskLength: tasks ? tasks.length : 0 });
 
-                console.log({ tasks });
+                // console.log({ tasks });
                 for (const task of tasks) {
                     console.log({ task });
                     console.log({ room: io.of('/').adapter.rooms.has(`user-${task.userId}`) });
@@ -25,7 +25,6 @@ function startDeadlineCron(io) {
                         token: task.token,
                         title: 'Deadline Reminder!!!',
                         body: `${task.title} Deadline ${new Date(task.deadline).toLocaleDateString('id-ID')}`,
-                        // data: { title: task.title, deadline: String(task.deadline) },
                     });
                 }
             } catch (error) {
